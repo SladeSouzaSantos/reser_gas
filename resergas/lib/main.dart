@@ -22,24 +22,67 @@ class TelaSelecaoIdioma extends StatelessWidget {
   @override
   Widget build(BuildContext context) {    
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: Colors.black,
+      body: Stack(
         children: [
-          const Text(
-            "Selecione um idioma",
-            style: TextStyle(
-              color: Colors.amber,
-              fontSize: 18,
-              fontVariations: [
-                FontVariation.weight(700),
-              ],
+
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/gas_in_oil.jpg'),
+                fit: BoxFit.cover,
+                opacity: 0.25,
+              ),
             ),
           ),
-          Row(
+
+
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 96.0,
             children: [
+              const Text(
+                "SELECIONE UM IDIOMA",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontVariations: [
+                    FontVariation.weight(900),
+                  ],
+                ),
+              ),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.0,            
+                children: [
+
+                  InkWell(
+                    onTap: (){},
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
+                    child: Center(
+                      child: Image.asset('assets/images/brasil.png', height: 50.0, width: 50.0),
+                    ),
+                  ),
+
+                  InkWell(
+                    onTap: (){},
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
+                    child: Center(
+                      child: Image.asset('assets/images/estados-unidos.png', height: 50.0, width: 50.0),
+                    ),
+                  ),
+
+                  InkWell(
+                    onTap: (){},
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
+                    child: Center(
+                      child: Image.asset('assets/images/espanha.png', height: 50.0, width: 50.0),
+                    ),
+                  ),
+
+                ],
+              ),
             ],
           ),
         ],
