@@ -29,6 +29,7 @@ class TelaSelecaoIdioma extends StatelessWidget {
           const VideoBackground(
             videoPath: 'assets/videos/gas_in_oil.mp4',
           ),
+
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -41,34 +42,41 @@ class TelaSelecaoIdioma extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
+                
                 const SizedBox(height: 96.0),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: PaisButtonWidget(
                         caminhoImagem: 'assets/images/brasil.png',
                         idioma: 'Português',
                       ),
                     ),
+                    
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: PaisButtonWidget(
                         caminhoImagem: 'assets/images/estados-unidos.png',
                         idioma: 'Inglês',
                       ),
                     ),
+                    
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: PaisButtonWidget(
                         caminhoImagem: 'assets/images/espanha.png',
                         idioma: 'Espanhol',
                       ),
                     ),
+
                   ],
                 ),
+
               ],
+
             ),
           ),
         ],
@@ -97,7 +105,7 @@ class PaisButtonWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(caminhoImagem, height: 50.0, width: 50.0),
+          Image.asset(caminhoImagem, height: 100.0, width: 100.0),
           const SizedBox(height: 8.0),
           Text(
             idioma,
