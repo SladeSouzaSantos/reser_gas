@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -17,67 +17,135 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TelaSelecaoIdioma extends StatelessWidget {
+class TelaSelecaoIdioma extends StatefulWidget {
   const TelaSelecaoIdioma({super.key});
+
+  @override
+  State<TelaSelecaoIdioma> createState() => _TelaSelecaoIdiomaState();
+}
+
+class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
+  
+  static const Map<String, String> _traducoes = {
+    'Português': 'SELECIONE UM IDIOMA',
+    'Inglês': 'SELECT A LANGUAGE',
+    'Espanhol': 'SELECCIONA UN IDIOMA',
+  };
+
+  static const Map<String, String> _traducoesBotao = {
+    'Português': 'Confirmar Seleção',
+    'Inglês': 'Confirm Selection',
+    'Espanhol': 'Confirmar Selección',
+  };
+
+  String? _idiomaSelecionado;
+
+  @override
+  void initState() {
+    super.initState();
+    _idiomaSelecionado = 'Português';
+  }
+
+  void _selecionarIdioma(String idioma) {
+    setState(() {
+      _idiomaSelecionado = idioma;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          const VideoBackground(
-            videoPath: 'assets/videos/gas_in_oil.mp4',
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/solo_formation.jpg'),
+                fit: BoxFit.cover,
+                opacity: 1.0,
+              ),
+            ),
           ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _traducoes[_idiomaSelecionado] ?? _traducoes['Português']!,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
 
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "SELECIONE UM IDIOMA",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+              const SizedBox(height: 96.0),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PaisButtonWidget(
+                    caminhoImagem: 'assets/images/brasil.png',
+                    idioma: 'Português',
+                    isSelected: _idiomaSelecionado == 'Português',
+                    onTap: _selecionarIdioma,
+                  ),
+
+                  const SizedBox(width: 32.0),
+                  
+                  PaisButtonWidget(
+                    caminhoImagem: 'assets/images/estados-unidos.png',
+                    idioma: 'Inglês',
+                    isSelected: _idiomaSelecionado == 'Inglês',
+                    onTap: _selecionarIdioma,
+                  ),
+
+                  const SizedBox(width: 32.0),
+
+                  PaisButtonWidget(
+                    caminhoImagem: 'assets/images/espanha.png',
+                    idioma: 'Espanhol',
+                    isSelected: _idiomaSelecionado == 'Espanhol',
+                    onTap: _selecionarIdioma,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 64.0),
+
+              GestureDetector(
+                onTap: () {
+                  
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/rock_formation.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white,
+                        spreadRadius: 2,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    _traducoesBotao[_idiomaSelecionado] ?? _traducoesBotao['Português']!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                
-                const SizedBox(height: 96.0),
-                
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: PaisButtonWidget(
-                        caminhoImagem: 'assets/images/brasil.png',
-                        idioma: 'Português',
-                      ),
-                    ),
-                    
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: PaisButtonWidget(
-                        caminhoImagem: 'assets/images/estados-unidos.png',
-                        idioma: 'Inglês',
-                      ),
-                    ),
-                    
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: PaisButtonWidget(
-                        caminhoImagem: 'assets/images/espanha.png',
-                        idioma: 'Espanhol',
-                      ),
-                    ),
+              ),
 
-                  ],
-                ),
+            ],
 
-              ],
-
-            ),
           ),
         ],
       ),
@@ -88,24 +156,67 @@ class TelaSelecaoIdioma extends StatelessWidget {
 class PaisButtonWidget extends StatelessWidget {
   final String caminhoImagem;
   final String idioma;
+  final bool isSelected;
+  final Function(String) onTap;
 
   const PaisButtonWidget({
     super.key,
     required this.caminhoImagem,
     required this.idioma,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double saturationFactor = isSelected ? 1.0 : 0.75;
+    final double borderWidth = isSelected ? 4.0 : 2.0;
+    final Color borderColor = isSelected ? Color.fromARGB(90, 255, 255, 255) : const Color.fromARGB(175, 255, 255, 255);
+    final double imageOpacity = isSelected ? 1.0 : 0.9;
+    
     return InkWell(
       onTap: () {
-        print('Idioma selecionado: $idioma');
+        onTap(idioma);
       },
       borderRadius: const BorderRadius.all(Radius.circular(24)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(caminhoImagem, height: 100.0, width: 100.0),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: borderColor,
+                width: borderWidth,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(90, 255, 255, 255),
+                  blurRadius: 4,
+                  offset: const Offset(2, 2),
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Opacity(
+                opacity: imageOpacity,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.matrix(<double>[
+                    saturationFactor, 0, 0, 0, 0,
+                    0, saturationFactor, 0, 0, 0,
+                    0, 0, saturationFactor, 0, 0,
+                    0, 0, 0, 1, 0,
+                  ]),
+                  child: Image.asset(
+                    caminhoImagem,
+                    height: 80.0,
+                    width: 80.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 8.0),
           Text(
             idioma,
@@ -119,57 +230,5 @@ class PaisButtonWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class VideoBackground extends StatefulWidget {
-  final String videoPath;
-  const VideoBackground({super.key, required this.videoPath});
-
-  @override
-  State<VideoBackground> createState() => _VideoBackgroundState();
-}
-
-class _VideoBackgroundState extends State<VideoBackground> {
-  late VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.asset(widget.videoPath)
-      ..initialize().then((_) {
-        _controller.setLooping(true);
-        _controller.setVolume(0.0);
-        _controller.play();
-        setState(() {});
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return Container(color: Colors.black);
-    }
-    return SizedBox.expand(
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: SizedBox(
-          width: _controller.value.size.width,
-          height: _controller.value.size.height,
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              const Color(0xC0000000),
-              BlendMode.darken,
-            ),
-            child: VideoPlayer(_controller),
-          ),
-        ),
-      ),
-    );
-  }
 }
