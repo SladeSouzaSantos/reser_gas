@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resergas/src/selecao_dados_gases_entrada/tela_entrada_gases.dart';
 import 'package:resergas/src/selecao_idioma/widgets/pais_button_widget.dart';
 
 class TelaSelecaoIdioma extends StatefulWidget {
@@ -34,6 +35,27 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
     setState(() {
       _idiomaSelecionado = idioma;
     });
+  }
+
+  void _confirmarSelecao(BuildContext context) {
+    if (_idiomaSelecionado != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TelaEntradaGases(
+            idiomaSelecionado: _idiomaSelecionado!, // Passando o idioma
+          ),
+        ),
+      );
+    } else {
+      // Exibir feedback ao usuário (e.g., um SnackBar)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, selecione um idioma antes de continuar.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -92,7 +114,8 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
               ),
 
               InkWell(
-                onTap: () {                  
+                onTap: () { 
+                   _confirmarSelecao(context);
                 },
                 borderRadius: BorderRadius.circular(25.0),
                 child: Container(
