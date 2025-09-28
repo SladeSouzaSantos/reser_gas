@@ -1,129 +1,136 @@
 import '../models/component.dart';
 
 class Components {
+  
+  static const Map<String, Component> _componentMap = {
+    // Hidrocarbonetos
+    'Methane': Component(
+      name: "Methane", 
+      molecularWeight: 16.042,
+      pseudocriticalPressure: 673.10,
+      pseudocriticalTemperature: -116.5,
+    ),
+    'Ethane': Component(
+      name: "Ethane", 
+      molecularWeight: 30.068,
+      pseudocriticalPressure: 708.3,
+      pseudocriticalTemperature: 90.09,
+    ),
+    'Propane': Component(
+      name: "Propane",
+      molecularWeight: 44.094,
+      pseudocriticalPressure: 617.4,
+      pseudocriticalTemperature: 206.26,
+    ),
+    'nButane': Component(
+      name: "nButane",
+      molecularWeight: 58.120,
+      pseudocriticalPressure: 550.7,
+      pseudocriticalTemperature: 305.62,
+    ),
+    'iButane': Component(
+      name: "iButane",
+      molecularWeight: 58.120,
+      pseudocriticalPressure: 529.1,
+      pseudocriticalTemperature: 274.96,
+    ),
+    'nPentane': Component(
+      name: "nPentane",
+      molecularWeight: 72.146,
+      pseudocriticalPressure: 489.5,
+      pseudocriticalTemperature: 385.92,
+    ),
+    'iPentane': Component(
+      name: "iPentane",
+      molecularWeight: 72.146,
+      pseudocriticalPressure: 483.0,
+      pseudocriticalTemperature: 370.0,
+    ),
+    'nHexane': Component(
+      name: "nHexane",
+      molecularWeight: 86.172,
+      pseudocriticalPressure: 439.7,
+      pseudocriticalTemperature: 454.50,
+    ),
+    'nHeptane': Component(
+      name: "nHeptane",
+      molecularWeight: 100.198,
+      pseudocriticalPressure: 396.9,
+      pseudocriticalTemperature: 512.62,
+    ),
+    'nOctane': Component(
+      name: "nOctane",
+      molecularWeight: 114.224,
+      pseudocriticalPressure: 362.1,
+      pseudocriticalTemperature: 565.2,
+    ),
+    'nNonane': Component(
+      name: "nNonane",
+      molecularWeight: 128.250,
+      pseudocriticalPressure: 345.0,
+      pseudocriticalTemperature: 613.0,
+    ),
+    'nDecane': Component(
+      name: "nDecane",
+      molecularWeight: 142.276,
+      pseudocriticalPressure: 320.0,
+      pseudocriticalTemperature: 655.0,
+    ),
 
-  static const Methane = Component(
-    name: "Metano (CH₄)",
-    molecularWeight: 16.042,
-    pseudocriticalPressure: 673.10,
-    pseudocriticalTemperature: -116.5,
-  );
-
-  static const Ethane = Component(
-    name: "Etano (C₂H₆)",
-    molecularWeight: 30.068,
-    pseudocriticalPressure: 708.3,
-    pseudocriticalTemperature: 90.09,
-  );
-
-  static const Propane = Component(
-    name: "Propano (C₃H₈)",
-    molecularWeight: 44.094,
-    pseudocriticalPressure: 617.4,
-    pseudocriticalTemperature: 206.26,
-  );
-
-  static const nButane = Component(
-    name: "n-Butano (n-C₄H₁₀)",
-    molecularWeight: 58.120,
-    pseudocriticalPressure: 550.7,
-    pseudocriticalTemperature: 305.62,
-  );
-
-  static const iButane = Component(
-    name: "i-Butano (i-C₄H₁₀)",
-    molecularWeight: 58.120,
-    pseudocriticalPressure: 529.1,
-    pseudocriticalTemperature: 274.96,
-  );
-
-  static const nPentane = Component(
-    name: "n-Pentano (n-C₅H₁₂)",
-    molecularWeight: 72.146,
-    pseudocriticalPressure: 489.5,
-    pseudocriticalTemperature: 385.92,
-  );
-
-  static const iPentane = Component(
-    name: "i-Pentano (i-C₅H₁₂)",
-    molecularWeight: 72.146,
-    pseudocriticalPressure: 483.0,
-    pseudocriticalTemperature: 370.0,
-  );
-
-  static const nHexane = Component(
-    name: "n-Hexano (n-C₆H₁₄)",
-    molecularWeight: 86.172,
-    pseudocriticalPressure: 439.7,
-    pseudocriticalTemperature: 454.50,
-  );
-
-  static const nHeptane = Component(
-    name: "n-Heptano (n-C₇H₁₆)",
-    molecularWeight: 100.198,
-    pseudocriticalPressure: 396.9,
-    pseudocriticalTemperature: 512.62,
-  );
-
-  static const nOctane = Component(
-    name: "n-Octano (n-C₈H₁₈)",
-    molecularWeight: 114.224,
-    pseudocriticalPressure: 362.1,
-    pseudocriticalTemperature: 565.2,
-  );
-
-  static const nNonane = Component(
-    name: "n-Nonano (n-C₉H₂₀)",
-    molecularWeight: 128.250,
-    pseudocriticalPressure: 345.0,
-    pseudocriticalTemperature: 613.0,
-  );
-
-  static const nDecane = Component(
-    name: "n-Decano (n-C₁₀H₂₂)",
-    molecularWeight: 142.276,
-    pseudocriticalPressure: 320.0,
-    pseudocriticalTemperature: 655.0,
-  );
-
-  static const Hydrogen = Component(
-    name: "Hidrogênio (H₂)",
-    molecularWeight: 2.016,
-    pseudocriticalPressure: 188.0,
-    pseudocriticalTemperature: -399.8,
-  );
-
-  static const Nitrogen = Component(
-    name: "Nitrogênio (N₂)",
-    molecularWeight: 28.016,
-    pseudocriticalPressure: 492.0,
-    pseudocriticalTemperature: -232.8,
-  );
-
-  static const Oxygen = Component(
-    name: "Oxigênio (O₂)",
-    molecularWeight: 32.0,
-    pseudocriticalPressure: 730.0,
-    pseudocriticalTemperature: -181.8,
-  );
-
-  static const HydrogenSulfide = Component(
-    name: "Sulfeto de Hidrogênio (H₂S)",
-    molecularWeight: 34.076,
-    pseudocriticalPressure: 1306.0,
-    pseudocriticalTemperature: 212.7,
-  );
-
-  static const CarbonDioxide = Component(
-    name: "Dióxido de Carbono (CO₂)",
-    molecularWeight: 44.010,
-    pseudocriticalPressure: 1073.0,
-    pseudocriticalTemperature: 88.0,
-  );
-
-  // Lista de todos os componentes, útil para Dropdowns ou tabelas de exibição
-  static final List<Component> allComponents = [
-    Methane, Ethane, Propane, nButane, iButane, nPentane, iPentane, nHexane,
-    nHeptane, nOctane, nNonane, nDecane, Hydrogen, Nitrogen, Oxygen, 
-    HydrogenSulfide, CarbonDioxide,];
+    // Não-Hidrocarbonetos
+    'Hydrogen': Component(
+      name: "Hydrogen",
+      molecularWeight: 2.016,
+      pseudocriticalPressure: 188.0,
+      pseudocriticalTemperature: -399.8,
+    ),
+    'Nitrogen': Component(
+      name: "Nitrogen",
+      molecularWeight: 28.016,
+      pseudocriticalPressure: 492.0,
+      pseudocriticalTemperature: -232.8,
+    ),
+    'Oxygen': Component(
+      name: "Oxygen",
+      molecularWeight: 32.0,
+      pseudocriticalPressure: 730.0,
+      pseudocriticalTemperature: -181.8,
+    ),
+    'HydrogenSulfide': Component(
+      name: "HydrogenSulfide",
+      molecularWeight: 34.076,
+      pseudocriticalPressure: 1306.0,
+      pseudocriticalTemperature: 212.7,
+    ),
+    'CarbonDioxide': Component(
+      name: "CarbonDioxide",
+      molecularWeight: 44.010,
+      pseudocriticalPressure: 1073.0,
+      pseudocriticalTemperature: 88.0,
+    ),
+    'WaterVapor': Component(
+      name: "WaterVapor",
+      molecularWeight: 18.015,
+      pseudocriticalPressure: 3200.0,
+      pseudocriticalTemperature: 705.4,
+    ),
+    'Helium': Component(
+      name: "Helium",
+      molecularWeight: 4.002,
+      pseudocriticalPressure: 33.2,
+      pseudocriticalTemperature: -450.4,
+    ),
+    'Argon': Component(
+      name: "Argon",
+      molecularWeight: 39.948,
+      pseudocriticalPressure: 705.5,
+      pseudocriticalTemperature: -188.4,
+    ),
+  };
+  
+  static List<String> get allKeys => _componentMap.keys.toList();
+  
+  static Component getComponentByKey(String key) {
+        return _componentMap[key] ?? _componentMap['Methane']!;
+  }
 }

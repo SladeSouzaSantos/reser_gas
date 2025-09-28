@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resergas/src/selecao_dados_gases_entrada/tela_entrada_gases.dart';
 import 'package:resergas/src/selecao_idioma/widgets/pais_button_widget.dart';
+import '../../domain/services/localization_service.dart';
 
 class TelaSelecaoIdioma extends StatefulWidget {
   const TelaSelecaoIdioma({super.key});
@@ -11,55 +12,55 @@ class TelaSelecaoIdioma extends StatefulWidget {
 
 class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
   
-  static const Map<String, String> _traducoes = {
-    'Português': 'SELECIONE UM IDIOMA',
-    'Inglês': 'SELECT A LANGUAGE',
-    'Espanhol': 'SELECCIONA UN IDIOMA',
-  };
-
-  static const Map<String, String> _traducoesBotao = {
-    'Português': 'Confirmar Seleção',
-    'Inglês': 'Confirm Selection',
-    'Espanhol': 'Confirmar Selección',
-  };
-
+  final LocalizationService _localizationService = LocalizationService();
+  
   String? _idiomaSelecionado;
 
   @override
   void initState() {
     super.initState();
-    _idiomaSelecionado = 'Português';
+    
+    _idiomaSelecionado = 'Português'; 
   }
-
+  
   void _selecionarIdioma(String idioma) {
     setState(() {
       _idiomaSelecionado = idioma;
     });
   }
-
+  
   void _confirmarSelecao(BuildContext context) {
     if (_idiomaSelecionado != null) {
+      
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => TelaEntradaGases(
-            idiomaSelecionado: _idiomaSelecionado!, // Passando o idioma
+            idiomaSelecionado: _idiomaSelecionado!, 
           ),
         ),
       );
+
     } else {
-      // Exibir feedback ao usuário (e.g., um SnackBar)
+      final String errorMessage = _localizationService.getTranslation('erro_selecao_idioma', 'Português');
+      
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, selecione um idioma antes de continuar.'),
+        SnackBar(
+          content: Text(errorMessage),
           backgroundColor: Colors.red,
         ),
       );
+
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    
+    final String currentLang = _idiomaSelecionado ?? 'Português';    
+    final String tituloCentral = _localizationService.getTranslation('selecao_idioma_titulo', currentLang);    
+    final String textoBotao = _localizationService.getTranslation('botao_confirmar_selecao', currentLang);
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -75,10 +76,10 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 96.0,
-            children: [
+            spacing: MediaQuery.of(context).size.height * 0.1,
+            children: [              
               Text(
-                _traducoes[_idiomaSelecionado] ?? _traducoes['Português']!,
+                tituloCentral,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -96,10 +97,10 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
                     isSelected: _idiomaSelecionado == 'Português',
                     onTap: _selecionarIdioma,
                   ),
-                  
+
                   PaisButtonWidget(
                     caminhoImagem: 'assets/images/estados-unidos.png',
-                    idioma: 'Inglês',
+                    idioma: 'Inglês', // Deve corresponder à chave no LocalizationService
                     isSelected: _idiomaSelecionado == 'Inglês',
                     onTap: _selecionarIdioma,
                   ),
@@ -112,7 +113,7 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
                   ),
                 ],
               ),
-
+              
               InkWell(
                 onTap: () { 
                    _confirmarSelecao(context);
@@ -128,7 +129,7 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 255, 255, 255),
                         spreadRadius: 2,
                         blurRadius: 7,
                         offset: const Offset(0, 3),
@@ -136,7 +137,7 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
                     ],
                   ),
                   child: Text(
-                    _traducoesBotao[_idiomaSelecionado] ?? _traducoesBotao['Português']!,
+                    textoBotao,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -144,9 +145,7 @@ class _TelaSelecaoIdiomaState extends State<TelaSelecaoIdioma> {
                   ),
                 ),
               ),
-
-            ],
-
+            ],            
           ),
         ],
       ),

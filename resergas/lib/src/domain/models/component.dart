@@ -1,4 +1,3 @@
-// Define a classe que armazena as propriedades físicas de um componente de gás.
 class Component {
   final String name;
   final double molecularWeight;
