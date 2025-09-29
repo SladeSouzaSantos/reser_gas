@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:resergas/src/selecao_dados_gases_entrada/tela_entrada_gases.dart';
 import 'package:resergas/src/selecao_idioma/widgets/pais_button_widget.dart';
 import '../../domain/services/localization_service.dart';
+import '../../selecao_dados_gases_entrada/presentation/tela_entrada_gases.dart';
 
 class TelaSelecaoIdioma extends StatefulWidget {
   const TelaSelecaoIdioma({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../domain/data/components.dart'; 
-import '../domain/models/component.dart';
-import '../domain/models/component_fraction.dart';
-import '../domain/services/localization_service.dart';
+import '../../domain/data/components.dart'; 
+import '../../domain/models/component.dart';
+import '../../domain/models/component_fraction.dart';
+import '../../domain/services/localization_service.dart';
 
 class RadioGroup<T> extends StatelessWidget {
   const RadioGroup({
@@ -117,7 +117,6 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
     }
     _showSnackBar(_getTranslation('sucesso_confirmar'), Colors.green);
 
-    print('Valor confirmado: $value');
   }
 
   void _onConfirmDensidade() {
@@ -142,8 +141,7 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
     }
 
     _showSnackBar(_getTranslation('sucesso_confirmar'), Colors.green);
-    
-    print('Dados de Propriedades Confirmados: $_selectedComponents');
+  
   }
   
   void _addComponentFraction() {
