@@ -127,6 +127,26 @@ class Components {
       pseudocriticalTemperature: -188.4,
     ),
   };
+
+  static const List<String> _nonHydrocarbonKeys = [
+    'Nitrogen',
+    'Oxygen',
+    'HydrogenSulfide',
+    'CarbonDioxide',
+    'WaterVapor',
+    'Helium',
+    'Argon',
+  ];
+
+  static List<Component> getNonHydrocarbonComponents() {
+    return _nonHydrocarbonKeys
+        .map((key) => _componentMap[key]!)
+        .toList();
+  }
+  
+  static List<String> get nonHydrocarbonKeys => _nonHydrocarbonKeys;
+
+  static List<Component> getAllComponents() => _componentMap.values.toList();
   
   static List<String> get allKeys => _componentMap.keys.toList();
   
