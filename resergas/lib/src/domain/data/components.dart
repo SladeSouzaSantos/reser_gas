@@ -128,6 +128,59 @@ class Components {
     ),
   };
 
+  static const Map<String, Component> _nonHydrocarbonMap = {
+
+    
+    'Hydrogen': Component(
+      name: "Hydrogen",
+      molecularWeight: 2.016,
+      pseudocriticalPressure: 188.0,
+      pseudocriticalTemperature: -399.8,
+    ),
+    'Nitrogen': Component(
+      name: "Nitrogen",
+      molecularWeight: 28.016,
+      pseudocriticalPressure: 492.0,
+      pseudocriticalTemperature: -232.8,
+    ),
+    'Oxygen': Component(
+      name: "Oxygen",
+      molecularWeight: 32.0,
+      pseudocriticalPressure: 730.0,
+      pseudocriticalTemperature: -181.8,
+    ),
+    'HydrogenSulfide': Component(
+      name: "HydrogenSulfide",
+      molecularWeight: 34.076,
+      pseudocriticalPressure: 1306.0,
+      pseudocriticalTemperature: 212.7,
+    ),
+    'CarbonDioxide': Component(
+      name: "CarbonDioxide",
+      molecularWeight: 44.010,
+      pseudocriticalPressure: 1073.0,
+      pseudocriticalTemperature: 88.0,
+    ),
+    'WaterVapor': Component(
+      name: "WaterVapor",
+      molecularWeight: 18.015,
+      pseudocriticalPressure: 3200.0,
+      pseudocriticalTemperature: 705.4,
+    ),
+    'Helium': Component(
+      name: "Helium",
+      molecularWeight: 4.002,
+      pseudocriticalPressure: 33.2,
+      pseudocriticalTemperature: -450.4,
+    ),
+    'Argon': Component(
+      name: "Argon",
+      molecularWeight: 39.948,
+      pseudocriticalPressure: 705.5,
+      pseudocriticalTemperature: -188.4,
+    ),
+  };
+
   static const List<String> _nonHydrocarbonKeys = [
     'Nitrogen',
     'Oxygen',
@@ -144,11 +197,11 @@ class Components {
         .toList();
   }
   
-  static List<String> get nonHydrocarbonKeys => _nonHydrocarbonKeys;
-
   static List<Component> getAllComponents() => _componentMap.values.toList();
   
   static List<String> get allKeys => _componentMap.keys.toList();
+
+  static List<String> get nonHydrocarbonKeys => _nonHydrocarbonMap.keys.toList();
   
   static Component getComponentByKey(String key) {
         return _componentMap[key] ?? _componentMap['Methane']!;

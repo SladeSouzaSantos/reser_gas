@@ -1,55 +1,38 @@
 import 'package:flutter/material.dart';
+// Imports ajustados para subir dois níveis para a pasta domain
 import '../../domain/data/components.dart'; 
 import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/services/localization_service.dart';
 
-class EntradaGasesController extends ChangeNotifier {
-
+class PropriedadesGasesController extends ChangeNotifier {
+  
   final LocalizationService _localizationService = LocalizationService(); 
   final String _currentLanguage;
-  
-  EntradaGasesController({required String idiomaInicial}) 
+
+  PropriedadesGasesController({required String idiomaInicial}) 
     : _currentLanguage = idiomaInicial;
-    
-  final TextEditingController massaMolecularController = TextEditingController();
   
-  String _contaminanteOption = 'sem';
-  String get contaminanteOption => _contaminanteOption;
+  // --- ESTADO EXCLUSIVO PARA A LISTA DA ABA PROPRIEDADES ---
   
   final TextEditingController fractionController = TextEditingController();
-
-
+  
   final List<ComponentFraction> _selectedComponents = [];
   List<ComponentFraction> get selectedComponents => _selectedComponents;
-
-  Component _selectedComponentToAdd = Components.getComponentByKey("Hydrogen"); 
-  Component get selectedComponentToAdd => _selectedComponentToAdd;
-
-  double _totalFraction = 0.0;
-  double get totalFraction => _totalFraction;
-
-
-  String get currentLanguage => _currentLanguage;
   
-  String getTranslation(String key) {
+  Component _selectedComponentToAdd = Components.getComponentByKey("Methane");
+  Component get selectedComponentToAdd => _selectedComponentToAdd;
+  
+  double _totalFraction = 0.0;
+  double get totalFraction => _totalFraction;    
+  String get currentLanguage => _currentLanguage; 
 
+  String getTranslation(String key) {
     return _localizationService.getTranslation(key, _currentLanguage);
   }
 
   void _calculateTotalFraction() {
     _totalFraction = _selectedComponents.fold(0.0, (sum, item) => sum + item.fraction);
-  }
-  
-  void handleContaminanteChange(String? newValue) {
-    if (newValue != null) {
-      _contaminanteOption = newValue;
-      
-      if (newValue == 'sem') {
-        _clearTabela(); 
-      }
-      notifyListeners();
-    }
   }
 
   void handleComponentSelect(Component? newComponent) {
@@ -58,23 +41,23 @@ class EntradaGasesController extends ChangeNotifier {
       notifyListeners(); 
     }
   }
-  
+
   void addComponentFraction(BuildContext context) {
     final String fractionText = fractionController.text;
     final double? fractionValue = double.tryParse(fractionText.replaceAll(',', '.'));
-
+    
     if (fractionValue == null || fractionValue <= 0) {
       _showSnackBar(context, getTranslation('erro_fracao_invalida'), Colors.red);
       return;
     }
-
+    
     final Component newComponent = _selectedComponentToAdd;
     final double currentTotal = _totalFraction;
-
+    
     final bool isAlreadyAdded = _selectedComponents.any((c) => c.component.name == newComponent.name);
-
+    
     double newTotal = currentTotal + fractionValue;
-
+    
     if (isAlreadyAdded) {
       final existingFraction = _selectedComponents.firstWhere((c) => c.component.name == newComponent.name).fraction;
       newTotal = currentTotal - existingFraction + fractionValue;
@@ -86,7 +69,7 @@ class EntradaGasesController extends ChangeNotifier {
       _showSnackBar(context, msg, Colors.red);
       return;
     }
-
+    
     if (isAlreadyAdded) {
       final index = _selectedComponents.indexWhere((c) => c.component.name == newComponent.name);
       _selectedComponents[index] = ComponentFraction(
@@ -112,48 +95,22 @@ class EntradaGasesController extends ChangeNotifier {
     _showSnackBar(context, getTranslation('componente_removido'), Colors.orange);
     notifyListeners();
   }
-  
-  void onConfirmMassaMolecular(BuildContext context) {
 
-    final String massaText = massaMolecularController.text.trim();
-    final double? massa = double.tryParse(massaText.replaceAll(',', '.'));
-    
-    final bool hasComponentInput = _selectedComponents.isNotEmpty;
+  void onConfirmPropriedades(BuildContext context) {
 
-    if (massa == null || massa <= 0) {
-      _showSnackBar(context, getTranslation('erro_massa_invalida'), Colors.red);
+    if (_totalFraction <= 0) {
+      _showSnackBar(context, getTranslation('erro_soma_menor_igual_zero'), Colors.red);
+      return;
+    }
+    if (_totalFraction > 1.0) {
+       _showSnackBar(context, getTranslation('erro_soma_maior_um'), Colors.red);
       return;
     }
     
-    if (_contaminanteOption == 'com') {
-      if (!hasComponentInput) {
-        
-        _showSnackBar(context, getTranslation('erro_sem_componentes'), Colors.red); 
-        return;
-      }
-      
-      if (_totalFraction <= (0.0)) {
-        _showSnackBar(context, getTranslation('erro_soma_menor_igual_zero'), Colors.red);
-        return;
-      }
-      if (_totalFraction > (1.0)) {
-        _showSnackBar(context, getTranslation('erro_soma_maior_um'), Colors.red);
-        return;
-      }
-    }
+    debugPrint('Confirmação de Propriedades! Total: $_totalFraction, Componentes: ${_selectedComponents.length}');
     
-    if (_contaminanteOption == 'sem') {
-        _clearTabela();
-    }
-    
-    debugPrint('Confirmação de Massa Molecular concluída! Opção: $_contaminanteOption');
   }
-
-  void _clearTabela() {
-    _selectedComponents.clear();
-    _totalFraction = 0.0;
-  }
-
+  
   void _showSnackBar(BuildContext context, String message, Color color) {
     if (ScaffoldMessenger.of(context).mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -168,8 +125,6 @@ class EntradaGasesController extends ChangeNotifier {
 
   @override
   void dispose() {
-    
-    massaMolecularController.dispose();
     fractionController.dispose();
     super.dispose();
   }

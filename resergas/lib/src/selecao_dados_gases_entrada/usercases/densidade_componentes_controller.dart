@@ -4,52 +4,45 @@ import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/services/localization_service.dart';
 
-class EntradaGasesController extends ChangeNotifier {
-
+class DensidadeComponentesController extends ChangeNotifier {
+  
   final LocalizationService _localizationService = LocalizationService(); 
   final String _currentLanguage;
-  
-  EntradaGasesController({required String idiomaInicial}) 
+
+  DensidadeComponentesController({required String idiomaInicial}) 
     : _currentLanguage = idiomaInicial;
     
-  final TextEditingController massaMolecularController = TextEditingController();
+  final TextEditingController densityController = TextEditingController();
   
-  String _contaminanteOption = 'sem';
-  String get contaminanteOption => _contaminanteOption;
+  String _selectedDensityType = 'Seca';
+  String get selectedDensityType => _selectedDensityType;
   
   final TextEditingController fractionController = TextEditingController();
-
-
+  
   final List<ComponentFraction> _selectedComponents = [];
   List<ComponentFraction> get selectedComponents => _selectedComponents;
-
+  
   Component _selectedComponentToAdd = Components.getComponentByKey("Hydrogen"); 
   Component get selectedComponentToAdd => _selectedComponentToAdd;
-
+  
   double _totalFraction = 0.0;
   double get totalFraction => _totalFraction;
-
-
-  String get currentLanguage => _currentLanguage;
   
-  String getTranslation(String key) {
+  String get currentLanguage => _currentLanguage; 
 
+  String getTranslation(String key) {
     return _localizationService.getTranslation(key, _currentLanguage);
+  }
+
+  void handleDensityChange(String? newValue) {
+    if (newValue != null) {
+      _selectedDensityType = newValue;
+      notifyListeners(); 
+    }
   }
 
   void _calculateTotalFraction() {
     _totalFraction = _selectedComponents.fold(0.0, (sum, item) => sum + item.fraction);
-  }
-  
-  void handleContaminanteChange(String? newValue) {
-    if (newValue != null) {
-      _contaminanteOption = newValue;
-      
-      if (newValue == 'sem') {
-        _clearTabela(); 
-      }
-      notifyListeners();
-    }
   }
 
   void handleComponentSelect(Component? newComponent) {
@@ -58,35 +51,35 @@ class EntradaGasesController extends ChangeNotifier {
       notifyListeners(); 
     }
   }
-  
+
   void addComponentFraction(BuildContext context) {
     final String fractionText = fractionController.text;
     final double? fractionValue = double.tryParse(fractionText.replaceAll(',', '.'));
-
+    
     if (fractionValue == null || fractionValue <= 0) {
       _showSnackBar(context, getTranslation('erro_fracao_invalida'), Colors.red);
       return;
     }
-
+    
     final Component newComponent = _selectedComponentToAdd;
     final double currentTotal = _totalFraction;
-
+    
     final bool isAlreadyAdded = _selectedComponents.any((c) => c.component.name == newComponent.name);
-
+    
     double newTotal = currentTotal + fractionValue;
-
+    
     if (isAlreadyAdded) {
       final existingFraction = _selectedComponents.firstWhere((c) => c.component.name == newComponent.name).fraction;
       newTotal = currentTotal - existingFraction + fractionValue;
     }
-
+    
     if (newTotal > 1.0) { 
       final double remaining = 1.0 - (currentTotal - (isAlreadyAdded ? _selectedComponents.firstWhere((c) => c.component.name == newComponent.name).fraction : 0.0));
       final String msg = getTranslation('erro_max_fracao_atingido').replaceAll('{0}', remaining.toStringAsFixed(4));
       _showSnackBar(context, msg, Colors.red);
       return;
     }
-
+    
     if (isAlreadyAdded) {
       final index = _selectedComponents.indexWhere((c) => c.component.name == newComponent.name);
       _selectedComponents[index] = ComponentFraction(
@@ -112,48 +105,53 @@ class EntradaGasesController extends ChangeNotifier {
     _showSnackBar(context, getTranslation('componente_removido'), Colors.orange);
     notifyListeners();
   }
-  
-  void onConfirmMassaMolecular(BuildContext context) {
 
-    final String massaText = massaMolecularController.text.trim();
-    final double? massa = double.tryParse(massaText.replaceAll(',', '.'));
-    
-    final bool hasComponentInput = _selectedComponents.isNotEmpty;
+  // --- NOVO MÉTODO: Validação Completa da Aba Densidade (Agora no Controller) ---
+  void validateAndConfirmDensidade({
+    required BuildContext context,
+    required String contaminanteOption,
+  }) {
+    // 1. Validação Densidade
+    final String densidadeText = densityController.text.trim();
+    final double? densidade = double.tryParse(densidadeText.replaceAll(',', '.')); 
 
-    if (massa == null || massa <= 0) {
-      _showSnackBar(context, getTranslation('erro_massa_invalida'), Colors.red);
+    if (densidade == null || densidade <= 0) {
+      _showSnackBar(context, getTranslation('erro_densidade_invalida'), Colors.red);
       return;
     }
-    
-    if (_contaminanteOption == 'com') {
-      if (!hasComponentInput) {
-        
-        _showSnackBar(context, getTranslation('erro_sem_componentes'), Colors.red); 
-        return;
-      }
-      
-      if (_totalFraction <= (0.0)) {
+
+    // 2. Validação Contaminantes: Se 'com', deve ter componentes
+    if (contaminanteOption == 'com' && _selectedComponents.isEmpty) {
+      _showSnackBar(context, getTranslation('erro_sem_componentes'), Colors.red);
+      return;
+    }
+
+    // 3. Validação Soma de Fração (só se 'com contaminantes')
+    if (contaminanteOption == 'com') {
+      if (_totalFraction <= 0.0) {
         _showSnackBar(context, getTranslation('erro_soma_menor_igual_zero'), Colors.red);
         return;
       }
-      if (_totalFraction > (1.0)) {
+      if (_totalFraction > 1.0) {
         _showSnackBar(context, getTranslation('erro_soma_maior_um'), Colors.red);
         return;
       }
     }
     
-    if (_contaminanteOption == 'sem') {
-        _clearTabela();
-    }
+    // Se passou em todas validações
+    _clearTabela(contaminanteOption);
+    debugPrint('Confirmação de Densidade! Tipo: $_selectedDensityType, Valor: ${densityController.text}, Contaminantes: $contaminanteOption');
     
-    debugPrint('Confirmação de Massa Molecular concluída! Opção: $_contaminanteOption');
+    
   }
 
-  void _clearTabela() {
-    _selectedComponents.clear();
-    _totalFraction = 0.0;
+  void _clearTabela(String contaminanteOption){
+    if (contaminanteOption == "sem") {
+      _selectedComponents.clear();
+    }
+    _totalFraction = 0;
   }
-
+  
   void _showSnackBar(BuildContext context, String message, Color color) {
     if (ScaffoldMessenger.of(context).mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -168,8 +166,7 @@ class EntradaGasesController extends ChangeNotifier {
 
   @override
   void dispose() {
-    
-    massaMolecularController.dispose();
+    densityController.dispose();
     fractionController.dispose();
     super.dispose();
   }

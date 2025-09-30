@@ -11,7 +11,7 @@ class LocalizationService {
       'titulo': 'ENTRADA DE PROPRIEDADES DO GÁS',
       'aba_densidade': 'DENSIDADE',
       'aba_massa': 'MASSA MOLECULAR',
-      'aba_propriedades': 'PROPRIEDADES (Tabela)',
+      'aba_propriedades': 'COMPOSIÇÃO',
       'densidade_seco': 'Gás Seco',
       'densidade_umido': 'Gás Úmido',
       'label_densidade': 'Valor da Densidade ({0}) (Ex: 0.8)',
@@ -35,8 +35,15 @@ class LocalizationService {
       'erro_soma_maior_um': 'Erro: A soma total excedeu 1.0.',
       'componente_adicionado': 'Componente adicionado/atualizado com sucesso.',
       'componente_removido': 'Componente removido.',
+      'com_contaminantes': 'Com Componentes',
+      'sem_contaminantes': 'Sem Componentes',
+      'label_contaminantes': 'Contaminantes',
+      'erro_massa_invalida': 'Por favor, insira valor de Massa Molecular".',
+      'erro_sem_componentes': 'Adicione pelo menos um componente ou selecione "Sem Componentes".',
+      'erro_densidade_invalida': 'Por favor, insira um valor de Densidade válido.',
+      'erro_soma_menor_igual_zero': 'A somatória das frações deve ser estritamente maior que zero (0).',
 
-      // --- Componentes de Gás ATUALIZADOS (Fórmulas em notação simples) ---
+      // --- Componentes de Gás ---
       'Methane': 'Metano (CH₄)',
       'Ethane': 'Etano (C₂H₆)',
       'Propane': 'Propano (C₃H₈)',
@@ -69,7 +76,7 @@ class LocalizationService {
       'titulo': 'GAS PROPERTIES INPUT',
       'aba_densidade': 'DENSITY',
       'aba_massa': 'MOLECULAR WEIGHT',
-      'aba_propriedades': 'PROPERTIES (Table)',
+      'aba_propriedades': 'COMPOSITION',
       'densidade_seco': 'Dry Gas',
       'densidade_umido': 'Wet Gas',
       'label_densidade': 'Density Value ({0}) (Ex: 0.8)',
@@ -90,11 +97,18 @@ class LocalizationService {
       'sucesso_confirmar': 'Data successfully confirmed!',
       'erro_fracao_invalida': 'Please enter a valid decimal fraction (> 0).',
       'erro_max_fracao_atingido': 'Total sum cannot exceed 1.0. Remaining capacity: {0}.',
-      'erro_soma_maior_um': 'Error: Total sum exceeded 1.0.',
+      'erro_soma_maior_um': 'erro: Total sum exceeded 1.0.',
       'componente_adicionado': 'Component successfully added/updated.',
       'componente_removido': 'Component removed.',
+      'com_contaminantes': 'With Components',
+      'sem_contaminantes': 'Without Components',
+      'label_contaminantes': 'Contaminants',
+      'erro_massa_invalida': 'Please enter a valid Molecular Weight".',
+      'erro_sem_componentes': 'Add at least one component or select "Without Components".',
+      'erro_densidade_invalida': 'Please enter a valid Density value.',
+      'erro_soma_menor_igual_zero': 'The total sum of fractions must be strictly greater than zero (0).',
 
-      // --- Componentes de Gás ATUALIZADOS (Fórmulas em notação simples) ---
+      // --- Componentes de Gás ---
       'Methane': 'Methane (CH₄)',
       'Ethane': 'Ethane (C₂H₆)',
       'Propane': 'Propane (C₃H₈)',
@@ -127,7 +141,7 @@ class LocalizationService {
       'titulo': 'ENTRADA DE PROPIEDADES DEL GAS',
       'aba_densidade': 'DENSIDAD',
       'aba_massa': 'MASA MOLECULAR',
-      'aba_propriedades': 'PROPIEDADES (Tabla)',
+      'aba_propriedades': 'COMPOSICIÓN',
       'densidade_seco': 'Gas Seco',
       'densidade_umido': 'Gas Húmedo',
       'label_densidade': 'Valor de Densidad ({0}) (Ej: 0.8)',
@@ -148,11 +162,18 @@ class LocalizationService {
       'sucesso_confirmar': 'Datos confirmados con éxito!',
       'erro_fracao_invalida': 'Por favor, introduce una fracción decimal válida (> 0).',
       'erro_max_fracao_atingido': 'La suma total no puede exceder 1.0. Capacidad restante: {0}.',
-      'erro_soma_maior_um': 'Error: La suma total superó 1.0.',
+      'erro_soma_maior_um': 'erro: La suma total superó 1.0.',
       'componente_adicionado': 'Componente añadido/actualizado con éxito.',
       'componente_removido': 'Componente eliminado.',
+      'com_contaminantes': 'Con Componentes',
+      'sem_contaminantes': 'Sin Componentes',
+      'label_contaminantes': 'Contaminantes',
+      'erro_massa_invalida': 'Por favor, introduzca un valor de Masa Molecular válido".',
+      'erro_sem_componentes': 'Agregue al menos un componente o seleccione "Sin Componentes".',
+      'erro_densidade_invalida': 'Por favor, introduzca un valor de Densidad válido.',
+      'erro_soma_menor_igual_zero': 'La suma total de fracciones debe ser estrictamente mayor que cero (0).',
 
-      // --- Componentes de Gás ATUALIZADOS (Fórmulas em notação simples) ---
+      // --- Componentes de Gás ---
       'Methane': 'Metano (CH₄)',
       'Ethane': 'Etano (C₂H₆)',
       'Propane': 'Propano (C₃H₈)',
@@ -177,12 +198,12 @@ class LocalizationService {
   };
   
   String getTranslation(String key, String selectedLanguage) {
-    
+
     return _translations[selectedLanguage]?[key] ?? _translations['Português']?[key] ?? key;
   }
   
   List<String> getAvailableLanguages() {
-    
+
     if (_translations.isEmpty) return [];
 
     return _translations.keys.toList();

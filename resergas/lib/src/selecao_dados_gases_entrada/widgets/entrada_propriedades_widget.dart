@@ -42,33 +42,31 @@ class EntradaPropriedadesWidget extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: BlocoEntradaComponentesConteudo(
-              getTranslation: getTranslation,
-              currentLanguage: currentLanguage,
-              selectedComponents: selectedComponents,
-              selectedComponentToAdd: selectedComponentToAdd,
-              onComponentSelect: onComponentSelect,
-              fractionController: fractionController,
-              onAddComponentFraction: onAddComponentFraction,
-              onRemoveComponent: onRemoveComponent,
-              totalFraction: totalFraction,
-              
-              availableComponentKeys: Components.allKeys, 
-            ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocoEntradaComponentesConteudo(
+            getTranslation: getTranslation,
+            currentLanguage: currentLanguage,
+            selectedComponents: selectedComponents,
+            selectedComponentToAdd: selectedComponentToAdd,
+            onComponentSelect: onComponentSelect,
+            fractionController: fractionController,
+            onAddComponentFraction: onAddComponentFraction,
+            onRemoveComponent: onRemoveComponent,
+            totalFraction: totalFraction,            
+            availableComponentKeys: Components.allKeys, 
           ),
-        ),
-        
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 24.0),
-          child: buildConfirmButton(onConfirm),
-        ),
-      ],
+
+          const SizedBox(height: 32),
+
+          Center(
+            child: buildConfirmButton(onConfirm),
+          ),
+        ],
+      ),
     );
   }
 }
