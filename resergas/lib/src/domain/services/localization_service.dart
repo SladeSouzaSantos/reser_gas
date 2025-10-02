@@ -42,6 +42,51 @@ class LocalizationService {
       'erro_sem_componentes': 'Adicione pelo menos um componente ou selecione "Sem Componentes".',
       'erro_densidade_invalida': 'Por favor, insira um valor de Densidade válido.',
       'erro_soma_menor_igual_zero': 'A somatória das frações deve ser estritamente maior que zero (0).',
+      'titulo_reservatorio': 'DADOS DO RESERVATÓRIO',
+      
+      // Propriedades Calculadas (Display)
+      'tela_reservatorio_titulo': 'DADOS DO RESERVATÓRIO',
+      'propriedades_calculadas': 'PROPRIEDADES CALCULADAS DO GÁS',
+
+      // Entradas do Reservatório (Input)
+      'titulo_dados_reservatorio': 'CONDIÇÕES DO RESERVATÓRIO',
+      'label_pressao_reservatorio': 'Pressão do Reservatório', 
+      'label_temperatura_reservatorio': 'Temperatura do Reservatório',
+
+      // Propriedades e Unidades
+      'prop_ppc': 'Pressão Pseudo Crítica (Ppc)',
+      'prop_ppr': 'Pressão Pseudo Reduzida (Ppr)',
+      'prop_tpc': 'Temperatura Pseudo Crítica (Tpc)',
+      'prop_tpr': 'Temperatura Pseudo Reduzida (Tpr)',
+      'prop_massa_molecular': 'Massa Molecular (M)',
+      'prop_massa_especifica': 'Massa Específica (γg)',
+      'prop_densidade': 'Densidade Relativa (ρg)',
+      'prop_viscosidade': 'Viscosidade (μg)',
+      'prop_compressibilidade': 'Compressibilidade (cg)',
+      'prop_compressibilidade_reduzida': 'Compressibilidade Reduzida (cr)',
+      'prop_fator_compressibilidade': 'Fator de Compressibilidade (z)',
+      'prop_fator_volume_formacao': 'Fator Volume-Formação do Gás (Bg)',
+
+      // Unidades de Pressão e Temperatura (Para SuffixText ou Seleção)
+      'unidade_pressao_psia': 'psia',
+      'unidade_pressao_kpa': 'kPa',
+      'unidade_pressao_bar': 'bar',
+      'unidade_pressao_kgf_cm2': 'kgf/cm²',
+      'unidade_pressao_atm': 'atm',      
+      'unidade_temperatura_f': 'ºF',
+      'unidade_temperatura_c': 'ºC',
+      'unidade_temperatura_k': 'K',
+      'unidade_temperatura_r': '°R',
+      'unidade_massa_molecular': 'g/mol',
+      'unidade_massa_especifica': 'kg/m³',
+      'unidade_viscosidade': 'cP',
+      'unidade_compressibilidade': '1/psi',
+      'unidade_fator_volume_formacao': 'ft³/scf',
+      'unidade_adimensional': '',
+      
+      // Botões e Erros
+      'botao_calcular': 'CALCULAR',
+      'erro_pressao_temperatura': 'Pressão e Temperatura devem ser valores positivos válidos.',
 
       // --- Componentes de Gás ---
       'Methane': 'Metano (CH₄)',
@@ -107,6 +152,51 @@ class LocalizationService {
       'erro_sem_componentes': 'Add at least one component or select "Without Components".',
       'erro_densidade_invalida': 'Please enter a valid Density value.',
       'erro_soma_menor_igual_zero': 'The total sum of fractions must be strictly greater than zero (0).',
+      'titulo_reservatorio': 'RESERVOIR DATA',
+      
+      // Calculated Properties (Display)
+      'tela_reservatorio_titulo': 'RESERVOIR DATA',
+      'propriedades_calculadas': 'CALCULATED GAS PROPERTIES',
+
+      // Reservoir Inputs (Input)
+      'titulo_dados_reservatorio': 'RESERVOIR CONDITIONS',
+      'label_pressao_reservatorio': 'Reservoir Pressure',
+      'label_temperatura_reservatorio': 'Reservoir Temperature',
+
+      // Propriedades e Unidades
+      'prop_ppc': 'Pseudocritical Pressure (Ppc)',
+      'prop_ppr': 'Pseudoreduced Pressure (Ppr)',
+      'prop_tpc': 'Pseudocritical Temperature (Tpc)',
+      'prop_tpr': 'Pseudoreduced Temperature (Tpr)',
+      'prop_massa_molecular': 'Molecular Weight (M)',
+      'prop_massa_especifica': 'Specific Mass (γg)',
+      'prop_densidade': 'Relative Density (ρg)',
+      'prop_viscosidade': 'Viscosity (μg)',
+      'prop_compressibilidade': 'Compressibility (cg)',
+      'prop_compressibilidade_reduzida': 'Reduced Compressibility (cr)',
+      'prop_fator_compressibilidade': 'Compressibility Factor (z)',
+      'prop_fator_volume_formacao': 'Gas Formation Volume Factor (Bg)',
+
+      // Unidades de Pressão e Temperatura (Para SuffixText ou Seleção)
+      'unidade_pressao_psia': 'psia',
+      'unidade_pressao_kpa': 'kPa',
+      'unidade_pressao_bar': 'bar',
+      'unidade_pressao_kgf_cm2': 'kgf/cm²',
+      'unidade_pressao_atm': 'atm',      
+      'unidade_temperatura_f': 'ºF',
+      'unidade_temperatura_c': 'ºC',
+      'unidade_temperatura_k': 'K',
+      'unidade_temperatura_r': '°R',
+      'unidade_massa_molecular': 'g/mol',
+      'unidade_massa_especifica': 'kg/m³',
+      'unidade_viscosidade': 'cP',
+      'unidade_compressibilidade': '1/psi',
+      'unidade_fator_volume_formacao': 'ft³/scf',
+      'unidade_adimensional': '',
+      
+      // Buttons and Errors
+      'botao_calcular': 'CALCULATE',
+      'erro_pressao_temperatura': 'Pressure and Temperature must be valid positive values.',
 
       // --- Componentes de Gás ---
       'Methane': 'Methane (CH₄)',
@@ -172,6 +262,51 @@ class LocalizationService {
       'erro_sem_componentes': 'Agregue al menos un componente o seleccione "Sin Componentes".',
       'erro_densidade_invalida': 'Por favor, introduzca un valor de Densidad válido.',
       'erro_soma_menor_igual_zero': 'La suma total de fracciones debe ser estrictamente mayor que cero (0).',
+      'titulo_reservatorio': 'DATOS DEL YACIMIENTO',
+      
+      // Propriedades Calculadas (Display)
+      'tela_reservatorio_titulo': 'DATOS DEL YACIMIENTO',
+      'propriedades_calculadas': 'PROPIEDADES CALCULADAS DEL GAS',
+
+      // Entradas del Yacimiento (Input)
+      'titulo_dados_reservatorio': 'CONDICIONES DEL YACIMIENTO',
+      'label_pressao_reservatorio': 'Presión del Yacimiento',
+      'label_temperatura_reservatorio': 'Temperatura del Yacimiento',
+
+      // Propriedades e Unidades
+      'prop_ppc': 'Presión Pseudocrítica (Ppc)',
+      'prop_ppr': 'Presión Pseudoreducida (Ppr)',
+      'prop_tpc': 'Temperatura Pseudocrítica (Tpc)',
+      'prop_tpr': 'Temperatura Pseudoreducida (Tpr)',
+      'prop_massa_molecular': 'Masa Molecular (M)',
+      'prop_massa_especifica': 'Masa Específica (γg)',
+      'prop_densidade': 'Densidad Relativa (ρg)',
+      'prop_viscosidade': 'Viscosidad (μg)',
+      'prop_compressibilidade': 'Compresibilidad (cg)',
+      'prop_compressibilidade_reduzida': 'Compresibilidad Reducida (cr)',
+      'prop_fator_compressibilidade': 'Factor de Compresibilidad (z)',
+      'prop_fator_volume_formacao': 'Factor Volumen-Formación del Gas (Bg)',
+
+      // Unidades de Pressão e Temperatura (Para SuffixText ou Seleção)
+      'unidade_pressao_psia': 'psia',
+      'unidade_pressao_kpa': 'kPa',
+      'unidade_pressao_bar': 'bar',
+      'unidade_pressao_kgf_cm2': 'kgf/cm²',
+      'unidade_pressao_atm': 'atm',      
+      'unidade_temperatura_f': 'ºF',
+      'unidade_temperatura_c': 'ºC',
+      'unidade_temperatura_k': 'K',
+      'unidade_temperatura_r': '°R',
+      'unidade_massa_molecular': 'g/mol',
+      'unidade_massa_especifica': 'kg/m³',
+      'unidade_viscosidade': 'cP',
+      'unidade_compressibilidade': '1/psi',
+      'unidade_fator_volume_formacao': 'ft³/scf',
+      'unidade_adimensional': '', 
+      
+      // Botões e Errores
+      'botao_calcular': 'CALCULAR',
+      'erro_pressao_temperatura': 'Presión y Temperatura deben ser valores positivos válidos.',
 
       // --- Componentes de Gás ---
       'Methane': 'Metano (CH₄)',

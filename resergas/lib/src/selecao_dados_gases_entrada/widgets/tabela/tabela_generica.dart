@@ -82,7 +82,7 @@ class TabelaDadosGenerica<T> extends StatelessWidget {
               style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 12),
               textAlign: col.alinhamentoTexto,
             ),
-          )).toList(),
+          )),
           
           if (temColunaAcao)
             const Expanded(

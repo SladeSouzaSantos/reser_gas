@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 // Imports ajustados para subir dois níveis para a pasta domain
+import '../../apresentacao_dados_reservatorio_gas/presentation/tela_dados_reservatorio.dart';
 import '../../domain/data/components.dart'; 
 import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
+import '../domain/models/gas_input_data.dart';
 import '../../domain/services/localization_service.dart';
 
 class PropriedadesGasesController extends ChangeNotifier {
@@ -109,6 +111,21 @@ class PropriedadesGasesController extends ChangeNotifier {
     
     debugPrint('Confirmação de Propriedades! Total: $_totalFraction, Componentes: ${_selectedComponents.length}');
     
+    final inputData = GasInputData(
+      molecularWeight: _totalFraction,
+      pseudocriticalPressure: _totalFraction,
+      pseudocriticalTemperature: _totalFraction,
+    );
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => TelaDadosReservatorio(
+          idiomaSelecionado: _currentLanguage,
+          gasInputData: inputData,
+        ),
+      ),
+    );
   }
   
   void _showSnackBar(BuildContext context, String message, Color color) {

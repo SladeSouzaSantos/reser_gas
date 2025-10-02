@@ -59,7 +59,7 @@ class BlocoEntradaComponentesConteudo extends StatelessWidget {
                 ),
                 dropdownColor: const Color(0xFF2F333A),
                 style: const TextStyle(color: Colors.white),
-                value: selectedComponentToAdd,
+                initialValue: selectedComponentToAdd,
                 items: availableComponentKeys.map((String key) {
                   final component = Components.getComponentByKey(key);
                   final componentDisplayName = getTranslation(key); 

@@ -97,10 +97,10 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        backgroundColor: const Color(0xFF1E1E1E), 
+      child: Scaffold(         
         appBar: AppBar(
           backgroundColor: const Color(0xFF1E1E1E),
+          foregroundColor: Colors.white,
           title: Text(
             _getTranslation('titulo'),
             style: const TextStyle(color: Colors.white, fontSize: 18),
@@ -116,6 +116,7 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
             indicatorColor: Colors.amber,
           ),
         ),
+        backgroundColor: Colors.black,
         body: TabBarView(
           children: [
             EntradaDensidadeWidget(
