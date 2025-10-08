@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-// Imports ajustados para subir dois níveis para a pasta domain
+
 import '../../apresentacao_dados_reservatorio_gas/presentation/tela_dados_reservatorio.dart';
 import '../../domain/data/components.dart'; 
 import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
-import '../domain/models/gas_input_data.dart';
+import '../../domain/models/gas_reservatorio.dart';
 import '../../domain/services/localization_service.dart';
+import '../domain/models/gas_component_result.dart';
+import 'calculos/calcular_densidade.dart';
+import 'calculos/calcular_propriedades_composicao_gas.dart';
 
 class PropriedadesGasesController extends ChangeNotifier {
   
@@ -110,11 +113,15 @@ class PropriedadesGasesController extends ChangeNotifier {
     }
     
     debugPrint('Confirmação de Propriedades! Total: $_totalFraction, Componentes: ${_selectedComponents.length}');
+
+    final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);
+    final (dg, tipo) = CalcularDensidade().calcular(massaMolecular: gasComponentResult!.molecularWeightMistura);
     
-    final inputData = GasInputData(
-      molecularWeight: _totalFraction,
-      pseudocriticalPressure: _totalFraction,
-      pseudocriticalTemperature: _totalFraction,
+    final inputData = GasReservatorio(
+      gasComponents: gasComponentResult,
+      molecularWeight: gasComponentResult.molecularWeightMistura,
+      gasDensity: dg,
+      gasClassification: tipo,
     );
     
     Navigator.push(

@@ -1,34 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-
-import '../../selecao_dados_gases_entrada/domain/models/gas_input_data.dart';
+import '../../domain/models/gas_reservatorio.dart';
 import '../../domain/services/localization_service.dart';
 
-// Definindo os tipos de dados
+
 typedef GetTranslation = String Function(String key);
-
-// Estrutura para os resultados de cálculo (simplesmente para demonstrar)
-class GasPropertiesResult {
-  // Para fins de demonstração, valores fixos (serão calculados na versão final)
-  final double ppc = 670.0; 
-  final double tpc = 360.0;
-  final double ppr = 0.85; 
-  final double tpr = 1.15; 
-  final double molecularWeight = 20.0;
-  final double massaEspecifica = 1.5; // kg/m3 (Ex: 1.5)
-  final double densidade = 0.70; // (Ex: 0.70)
-  final double viscosidade = 0.015; // cP (Ex: 0.015)
-  final double compressibilidade = 1.5e-4; // 1/psi (Ex: 1.5E-4)
-  final double compressibilidadeReduzida = 0.12; // (Ex: 0.12)
-  final double fatorCompressibilidade = 0.89; // (Ex: 0.89)
-  final double fatorVolumeFormacao = 0.005; // ft3/scf (Ex: 0.005)
-
-  const GasPropertiesResult();
-}
 
 class TelaDadosReservatorio extends StatefulWidget {
   final String idiomaSelecionado;
-  final GasInputData gasInputData;
+  final GasReservatorio gasInputData;
 
   const TelaDadosReservatorio({
     super.key,
@@ -46,7 +26,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
   final TextEditingController _temperatureController = TextEditingController();
   
   // Variável para armazenar a largura máxima calculada
-  double? _maxUnitWidth; 
+  double? _maxUnitWidth;
+  GasReservatorio? _dadosGas; // Inicia como null
 
   // Unidades disponíveis (keys da LocalizationService)
   final List<String> _pressureUnits = ['unidade_pressao_psia', 'unidade_pressao_kpa', 'unidade_pressao_kgf_cm2', 'unidade_pressao_atm', 'unidade_pressao_bar'];
@@ -55,33 +36,33 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
   // Seleção atual
   late String _selectedPressureUnit;
   late String _selectedTemperatureUnit;
-
-  // Resultado do cálculo
-  GasPropertiesResult? _calculationResult;
+  
+  late bool _calculationResult;
 
   @override
   void initState() {
     super.initState();
     _selectedPressureUnit = _pressureUnits.first;
     _selectedTemperatureUnit = _temperatureUnits.first;
+    _calculationResult = false;
     
+    // Inicializa os dados do reservatório com os dados de entrada
+    _dadosGas = widget.gasInputData;
+
     // Inicia o cálculo da largura após a primeira renderização
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateMaxUnitWidth(context);
     });
   }
   
-  // Função auxiliar para tradução
   String _getTranslation(String key) {
     return _localizationService.getTranslation(key, widget.idiomaSelecionado);
   }
-
-  // NOVO MÉTODO: Calcula a largura necessária para o texto da unidade mais longa
+  
   void _calculateMaxUnitWidth(BuildContext context) {
     const textStyle = TextStyle(color: Colors.amber, fontSize: 16);
     double maxWidth = 0.0;
-
-    // Combina todas as unidades para encontrar a mais longa
+    
     final allUnitsKeys = {..._pressureUnits, ..._temperatureUnits}.toSet();
 
     for (var key in allUnitsKeys) {
@@ -105,15 +86,45 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
 
   // Função placeholder para o cálculo
   void _calculateGasProperties() {
-    if (_pressureController.text.isEmpty || _temperatureController.text.isEmpty) {
+
+    final String pressureText = _pressureController.text.trim();
+    final double? pressure = double.tryParse(pressureText.replaceAll(',', '.'));
+
+    final String temperatureText = _temperatureController.text.trim();
+    final double? temperature = double.tryParse(temperatureText.replaceAll(',', '.'));
+    
+    if ((pressure == null || pressure <= 0) || (temperature == null || temperature <= 0)) {
+      setState(() {
+        _calculationResult = false;
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, insira todos os valores.')),
+        SnackBar(content: Text(_getTranslation('erro_inserir_valores_validos'))),
       );
       return;
     }
+
+    // Lógica de qual cálculo usar (por Massa Molecular, Densidade ou Composição)
+    if(widget.gasInputData.molecularWeight != null){
+      print("Calcular, por Massa Molecular!!!");
+
+    } else if(widget.gasInputData.gasDensity != null){
+      print("Calcular, por densidade!!!");
+
+    } else {
+      print("Calcular, por Composição!!!");
+
+    }
     
     setState(() {
-      _calculationResult = const GasPropertiesResult();
+      _calculationResult = true;
+      _dadosGas = GasReservatorio(
+          reservoirPressure: pressure,
+          reservoirTemperature: temperature,
+          gasDensity: widget.gasInputData.gasDensity,
+          molecularWeight: widget.gasInputData.molecularWeight,
+          gasClassification: widget.gasInputData.gasClassification,
+      );
     });
   }
 
@@ -130,7 +141,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       style: const TextStyle(color: Colors.white, fontSize: 16),
       decoration: InputDecoration(
-        labelText: _getTranslation(labelKey),
+        // TRADUÇÃO APLICADA: labelText
+        labelText: _getTranslation(labelKey), 
         labelStyle: const TextStyle(color: Colors.amber),
         enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
         focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
@@ -139,9 +151,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
         // Seletor de unidade integrado (Sufixo)
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
-          // Usa SizedBox com largura calculada (_maxUnitWidth) para forçar o alinhamento
           child: SizedBox( 
-            width: _maxUnitWidth, // Pode ser nulo na primeira construção, mas o setState recalcula
+            width: _maxUnitWidth,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: selectedUnit,
@@ -154,7 +165,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
                   return DropdownMenuItem<String>(
                     value: key,
                     child: Text(
-                      _getTranslation(key),
+                      // TRADUÇÃO APLICADA: Opções do Dropdown
+                      _getTranslation(key), 
                       textAlign: TextAlign.right,
                     ),
                   );
@@ -169,7 +181,9 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
 
   // Bloco de exibição de uma propriedade (nome, símbolo, valor, unidade)
   Widget _buildPropertyRow(String propKey, double? value, String unitKey) { 
+    // TRADUÇÃO APLICADA: Unidade e 'N/A'
     final String unit = unitKey.isEmpty ? '' : _getTranslation(unitKey);
+    final String naText = _getTranslation('N/A'); // Sugestão de chave 'N/A'
     
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
@@ -179,6 +193,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           // Lado Esquerdo: Rótulo da Propriedade (Ex: 'Pressão Pseudocrítica (Ppc):')
           Expanded(
             child: Text(
+              // TRADUÇÃO APLICADA: Rótulo da Propriedade
               '${_getTranslation(propKey)}:', 
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
@@ -186,7 +201,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           
           // Lado Direito: Valor e Unidade
           Text(
-            value != null ? '${value.toStringAsFixed(4)} $unit' : 'N/A',
+            value != null ? '${value.toStringAsFixed(4)} $unit' : naText,
             style: const TextStyle(color: Colors.amber, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
@@ -207,7 +222,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: Text(
-          _getTranslation('botao_calcular'),
+          // TRADUÇÃO APLICADA: Texto do Botão
+          _getTranslation('botao_calcular'), 
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -220,10 +236,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
 
   @override
   Widget build(BuildContext context) {
-    // Se a largura não foi calculada, exibimos um Container vazio temporariamente.
-    // Isso é uma medida de segurança, pois o cálculo é feito no WidgetsBinding.
     if (_maxUnitWidth == null) {
-      // Poderia ser um loading spinner, mas para manter a simplicidade:
       return const Scaffold(
         backgroundColor: Colors.black,
         body: Center(child: CircularProgressIndicator(color: Colors.amber)),
@@ -234,7 +247,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E1E1E),
         foregroundColor: Colors.white,
-        title: Text(_getTranslation('tela_reservatorio_titulo'), style: const TextStyle(color: Colors.white, fontSize: 18)),         
+        // TRADUÇÃO APLICADA: Título da AppBar
+        title: Text(_getTranslation('tela_reservatorio_titulo'), style: const TextStyle(color: Colors.white, fontSize: 18)), 
       ),
       backgroundColor: Colors.black, 
       body: SingleChildScrollView(
@@ -254,7 +268,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
                   
                   // --- ENTRADA DE PRESSÃO E TEMPERATURA ---
                   
-                  // Entrada de Pressão
+                  // Entrada de Pressão (label_pressao_reservatorio já está traduzida)
                   _buildInputWithUnitSelector(
                     labelKey: 'label_pressao_reservatorio',
                     controller: _pressureController,
@@ -263,7 +277,6 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedPressureUnit = newValue!;
-                        // Recalcular largura caso mude o idioma (embora seja improvável aqui)
                         _calculateMaxUnitWidth(context); 
                       });
                     },
@@ -271,7 +284,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
 
                   const SizedBox(height: 32),
 
-                  // Entrada de Temperatura
+                  // Entrada de Temperatura (label_temperatura_reservatorio já está traduzida)
                   _buildInputWithUnitSelector(
                     labelKey: 'label_temperatura_reservatorio',
                     controller: _temperatureController,
@@ -291,40 +304,41 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
                   Center(child: _buildCalculateButton()),
 
                   // --- RESULTADOS ---
-                  if (_calculationResult != null) ...[
+                  if (_calculationResult) ...[
                     const SizedBox(height: 48),
                     const Divider(color: Colors.amber),
                     const SizedBox(height: 16),
                     
                     // Título dos Resultados
                     Text(
+                      // TRADUÇÃO APLICADA: Título dos Resultados
                       _getTranslation('propriedades_calculadas'),
                       style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     
-                    // Exibição das propriedades
-                    _buildPropertyRow('prop_ppc', widget.gasInputData.pseudocriticalPressure, 'unidade_pressao_psia'),
-                    _buildPropertyRow('prop_ppr', _calculationResult!.ppr, 'unidade_adimensional'),
+                    // Exibição das propriedades (prop_ppc, prop_tpc, etc., já estão traduzidas nas chamadas)
+                    _buildPropertyRow('prop_ppc', _dadosGas!.pseudocriticalPressure, 'unidade_pressao_psia'),
+                    _buildPropertyRow('prop_ppr', _dadosGas!.pseudoreducedPressure, 'unidade_adimensional'),
                     
-                    _buildPropertyRow('prop_tpc', widget.gasInputData.pseudocriticalTemperature, 'unidade_temperatura_r'),
-                    _buildPropertyRow('prop_tpr', _calculationResult!.tpr, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_tpc', _dadosGas!.pseudocriticalTemperature, 'unidade_temperatura_r'),
+                    _buildPropertyRow('prop_tpr', _dadosGas!.pseudoreducedTemperature, 'unidade_adimensional'),
                     
-                    _buildPropertyRow('prop_massa_molecular', widget.gasInputData.molecularWeight, 'unidade_massa_molecular'),
+                    _buildPropertyRow('prop_massa_molecular', _dadosGas!.molecularWeight, 'unidade_massa_molecular'),
                     
-                    _buildPropertyRow('prop_massa_especifica', _calculationResult!.massaEspecifica, 'unidade_massa_especifica'),
+                    _buildPropertyRow('prop_massa_especifica', _dadosGas!.gasSpecificGravity, 'unidade_massa_especifica'),
                     
-                    _buildPropertyRow('prop_densidade', _calculationResult!.densidade, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_densidade', _dadosGas!.gasDensity, 'unidade_adimensional'),
                     
-                    _buildPropertyRow('prop_viscosidade', _calculationResult!.viscosidade, 'unidade_viscosidade'),
+                    _buildPropertyRow('prop_viscosidade', _dadosGas!.gasViscosity, 'unidade_viscosidade'),
                     
-                    _buildPropertyRow('prop_compressibilidade', _calculationResult!.compressibilidade, 'unidade_compressibilidade'),
+                    _buildPropertyRow('prop_compressibilidade', _dadosGas!.compressibility, 'unidade_compressibilidade'),
                     
-                    _buildPropertyRow('prop_compressibilidade_reduzida', _calculationResult!.compressibilidadeReduzida, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_compressibilidade_reduzida', _dadosGas!.reducedCompressibility, 'unidade_adimensional'),
                     
-                    _buildPropertyRow('prop_fator_compressibilidade', _calculationResult!.fatorCompressibilidade, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_fator_compressibilidade', _dadosGas!.compressibilityFactor, 'unidade_adimensional'),
                     
-                    _buildPropertyRow('prop_fator_volume_formacao', _calculationResult!.fatorVolumeFormacao, 'unidade_fator_volume_formacao'),
+                    _buildPropertyRow('prop_fator_volume_formacao', _dadosGas!.gasVolumeFactor, 'unidade_fator_volume_formacao'),
                   ],
                 ],
               ),

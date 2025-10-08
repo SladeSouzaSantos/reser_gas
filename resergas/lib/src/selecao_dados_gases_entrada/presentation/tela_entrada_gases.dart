@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:resergas/src/selecao_dados_gases_entrada/usercases/densidade_componentes_controller.dart'; 
-import 'package:resergas/src/selecao_dados_gases_entrada/usercases/entrada_gases_controller.dart'; 
-import 'package:resergas/src/selecao_dados_gases_entrada/usercases/propriedades_gases_controller.dart'; // Controller de Propriedades
+import 'package:resergas/src/selecao_dados_gases_entrada/usercases/massa_molecular_controller.dart'; 
+import 'package:resergas/src/selecao_dados_gases_entrada/usercases/propriedades_gases_controller.dart';
 
 import '../../domain/data/components.dart';
 import '../../domain/services/localization_service.dart';
@@ -27,7 +27,7 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
   
   final LocalizationService _localizationService = LocalizationService();
   
-  late final EntradaGasesController _massaMolecularController;
+  late final MassaMolecularController _massaMolecularController;
   late final DensidadeComponentesController _densidadeComponentesController;
   late final PropriedadesGasesController _propriedadesGasesController;
   
@@ -40,7 +40,7 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
     _currentLanguage = widget.idiomaSelecionado;
     
     // Inicialização de todos os Controllers
-    _massaMolecularController = EntradaGasesController(idiomaInicial: _currentLanguage);
+    _massaMolecularController = MassaMolecularController(idiomaInicial: _currentLanguage);
     _densidadeComponentesController = DensidadeComponentesController(idiomaInicial: _currentLanguage);
     _propriedadesGasesController = PropriedadesGasesController(idiomaInicial: _currentLanguage); 
     

@@ -91,7 +91,7 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
               RadioListTile<String>(
                 contentPadding: EdgeInsets.zero,
                 title: Text(widget.getTranslation('densidade_seco'), style: const TextStyle(color: Colors.white70)),
-                value: 'Seca',
+                value: 'Seco',
                 groupValue: widget.selectedDensityType,
                 onChanged: widget.onDensityChange,
                 activeColor: Colors.amber,
@@ -100,7 +100,7 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
               RadioListTile<String>(
                 contentPadding: EdgeInsets.zero,
                 title: Text(widget.getTranslation('densidade_umido'), style: const TextStyle(color: Colors.white70)),
-                value: 'Úmida',
+                value: 'Úmido',
                 groupValue: widget.selectedDensityType,
                 onChanged: widget.onDensityChange,
                 activeColor: Colors.amber,

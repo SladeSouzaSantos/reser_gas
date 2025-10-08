@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:resergas/src/selecao_dados_gases_entrada/usercases/calculos/calcular_massa_molecular.dart';
+import '../../apresentacao_dados_reservatorio_gas/presentation/tela_dados_reservatorio.dart';
 import '../../domain/data/components.dart'; 
 import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/services/localization_service.dart';
+import '../../domain/models/gas_reservatorio.dart';
+import '../domain/models/gas_component_result.dart';
+import 'calculos/calcular_propriedades_composicao_gas.dart';
 
 class DensidadeComponentesController extends ChangeNotifier {
   
@@ -14,7 +19,7 @@ class DensidadeComponentesController extends ChangeNotifier {
     
   final TextEditingController densityController = TextEditingController();
   
-  String _selectedDensityType = 'Seca';
+  String _selectedDensityType = 'Seco';
   String get selectedDensityType => _selectedDensityType;
   
   final TextEditingController fractionController = TextEditingController();
@@ -22,7 +27,7 @@ class DensidadeComponentesController extends ChangeNotifier {
   final List<ComponentFraction> _selectedComponents = [];
   List<ComponentFraction> get selectedComponents => _selectedComponents;
   
-  Component _selectedComponentToAdd = Components.getComponentByKey("Hydrogen"); 
+  Component _selectedComponentToAdd = Components.getComponentByKey("Nitrogen"); 
   Component get selectedComponentToAdd => _selectedComponentToAdd;
   
   double _totalFraction = 0.0;
@@ -138,10 +143,32 @@ class DensidadeComponentesController extends ChangeNotifier {
       }
     }
     
-    // Se passou em todas validações
+
     _clearTabela(contaminanteOption);
     debugPrint('Confirmação de Densidade! Tipo: $_selectedDensityType, Valor: ${densityController.text}, Contaminantes: $contaminanteOption');
     
+    final double ma = CalcularMassaMolecular().calcular(densidade: densidade);
+
+    final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);
+
+    print(gasComponentResult);
+
+    final inputData = GasReservatorio(
+      gasComponents: gasComponentResult,
+      gasDensity: densidade,
+      gasClassification: _selectedDensityType,
+      molecularWeight: ma,
+    );
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => TelaDadosReservatorio(
+          idiomaSelecionado: _currentLanguage,
+          gasInputData: inputData,
+        ),
+      ),
+    );
     
   }
 

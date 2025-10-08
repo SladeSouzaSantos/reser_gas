@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:resergas/src/selecao_dados_gases_entrada/usercases/calculos/calcular_densidade.dart';
+import '../../apresentacao_dados_reservatorio_gas/presentation/tela_dados_reservatorio.dart';
 import '../../domain/data/components.dart'; 
 import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/services/localization_service.dart';
+import '../../domain/models/gas_reservatorio.dart';
+import '../domain/models/gas_component_result.dart';
+import 'calculos/calcular_propriedades_composicao_gas.dart';
 
-class EntradaGasesController extends ChangeNotifier {
+class MassaMolecularController extends ChangeNotifier {
 
   final LocalizationService _localizationService = LocalizationService(); 
   final String _currentLanguage;
   
-  EntradaGasesController({required String idiomaInicial}) 
+  MassaMolecularController({required String idiomaInicial}) 
     : _currentLanguage = idiomaInicial;
     
   final TextEditingController massaMolecularController = TextEditingController();
@@ -23,7 +28,7 @@ class EntradaGasesController extends ChangeNotifier {
   final List<ComponentFraction> _selectedComponents = [];
   List<ComponentFraction> get selectedComponents => _selectedComponents;
 
-  Component _selectedComponentToAdd = Components.getComponentByKey("Hydrogen"); 
+  Component _selectedComponentToAdd = Components.getComponentByKey("Nitrogen"); 
   Component get selectedComponentToAdd => _selectedComponentToAdd;
 
   double _totalFraction = 0.0;
@@ -46,7 +51,7 @@ class EntradaGasesController extends ChangeNotifier {
       _contaminanteOption = newValue;
       
       if (newValue == 'sem') {
-        _clearTabela(); 
+        _clearTabela(newValue); 
       }
       notifyListeners();
     }
@@ -142,16 +147,39 @@ class EntradaGasesController extends ChangeNotifier {
       }
     }
     
-    if (_contaminanteOption == 'sem') {
-        _clearTabela();
-    }
-    
+    _clearTabela(contaminanteOption);
     debugPrint('Confirmação de Massa Molecular concluída! Opção: $_contaminanteOption');
+
+    final (dg, tipo) = CalcularDensidade().calcular(massaMolecular: massa);
+
+    final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);
+
+    print(gasComponentResult);
+    
+    final inputData = GasReservatorio(
+      gasComponents: gasComponentResult,
+      molecularWeight: massa,
+      gasDensity: dg,
+      gasClassification: tipo,
+    );
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => TelaDadosReservatorio(
+          idiomaSelecionado: _currentLanguage,
+          gasInputData: inputData,
+        ),
+      ),
+    );
+
   }
 
-  void _clearTabela() {
-    _selectedComponents.clear();
-    _totalFraction = 0.0;
+  void _clearTabela(String contaminanteOption){
+    if (contaminanteOption == "sem") {
+      _selectedComponents.clear();
+    }
+    _totalFraction = 0;
   }
 
   void _showSnackBar(BuildContext context, String message, Color color) {

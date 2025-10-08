@@ -42,6 +42,7 @@ class LocalizationService {
       'erro_sem_componentes': 'Adicione pelo menos um componente ou selecione "Sem Componentes".',
       'erro_densidade_invalida': 'Por favor, insira um valor de Densidade válido.',
       'erro_soma_menor_igual_zero': 'A somatória das frações deve ser estritamente maior que zero (0).',
+      "erro_inserir_valores_validos": "Por favor, insira valores válidos de Pressão e Temperatura.",
       'titulo_reservatorio': 'DADOS DO RESERVATÓRIO',
       
       // Propriedades Calculadas (Display)
@@ -152,6 +153,7 @@ class LocalizationService {
       'erro_sem_componentes': 'Add at least one component or select "Without Components".',
       'erro_densidade_invalida': 'Please enter a valid Density value.',
       'erro_soma_menor_igual_zero': 'The total sum of fractions must be strictly greater than zero (0).',
+      "erro_inserir_valores_validos": "Please enter valid Pressure and Temperature values.",
       'titulo_reservatorio': 'RESERVOIR DATA',
       
       // Calculated Properties (Display)
@@ -262,6 +264,7 @@ class LocalizationService {
       'erro_sem_componentes': 'Agregue al menos un componente o seleccione "Sin Componentes".',
       'erro_densidade_invalida': 'Por favor, introduzca un valor de Densidad válido.',
       'erro_soma_menor_igual_zero': 'La suma total de fracciones debe ser estrictamente mayor que cero (0).',
+      "erro_inserir_valores_validos": "Por favor, ingrese valores válidos de Presión y Temperatura.",
       'titulo_reservatorio': 'DATOS DEL YACIMIENTO',
       
       // Propriedades Calculadas (Display)
