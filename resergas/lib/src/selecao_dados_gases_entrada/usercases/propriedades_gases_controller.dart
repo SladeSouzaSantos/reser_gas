@@ -6,7 +6,6 @@ import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/models/gas_reservatorio.dart';
 import '../../domain/services/localization_service.dart';
-import '../domain/models/gas_component_result.dart';
 import 'calculos/calcular_densidade.dart';
 import 'calculos/calcular_propriedades_composicao_gas.dart';
 
@@ -111,11 +110,15 @@ class PropriedadesGasesController extends ChangeNotifier {
        _showSnackBar(context, getTranslation('erro_soma_maior_um'), Colors.red);
       return;
     }
-    
-    debugPrint('Confirmação de Propriedades! Total: $_totalFraction, Componentes: ${_selectedComponents.length}');
 
     final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);
-    final (dg, tipo) = CalcularDensidade().calcular(massaMolecular: gasComponentResult!.molecularWeightMistura);
+    
+    if(gasComponentResult!.yHidrocarbonetos == 0){
+      _showSnackBar(context, getTranslation('erro_soma_hc_menor_igual_zero'), Colors.red);
+      return;
+    }
+
+    final (dg, tipo) = CalcularDensidade().calcular(massaMolecular: gasComponentResult.molecularWeightMistura);
     
     final inputData = GasReservatorio(
       gasComponents: gasComponentResult,

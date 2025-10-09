@@ -6,7 +6,6 @@ import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/services/localization_service.dart';
 import '../../domain/models/gas_reservatorio.dart';
-import '../domain/models/gas_component_result.dart';
 import 'calculos/calcular_propriedades_composicao_gas.dart';
 
 class DensidadeComponentesController extends ChangeNotifier {
@@ -143,16 +142,13 @@ class DensidadeComponentesController extends ChangeNotifier {
       }
     }
     
-
     _clearTabela(contaminanteOption);
     debugPrint('Confirmação de Densidade! Tipo: $_selectedDensityType, Valor: ${densityController.text}, Contaminantes: $contaminanteOption');
     
     final double ma = CalcularMassaMolecular().calcular(densidade: densidade);
 
     final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);
-
-    print(gasComponentResult);
-
+    
     final inputData = GasReservatorio(
       gasComponents: gasComponentResult,
       gasDensity: densidade,
@@ -175,8 +171,8 @@ class DensidadeComponentesController extends ChangeNotifier {
   void _clearTabela(String contaminanteOption){
     if (contaminanteOption == "sem") {
       _selectedComponents.clear();
-    }
-    _totalFraction = 0;
+      _totalFraction = 0;
+    }    
   }
   
   void _showSnackBar(BuildContext context, String message, Color color) {

@@ -1,5 +1,4 @@
 import '../../selecao_dados_gases_entrada/domain/models/gas_component_result.dart';
-import 'component_fraction.dart';
 
 class GasReservatorio {
   final String? gasClassification;

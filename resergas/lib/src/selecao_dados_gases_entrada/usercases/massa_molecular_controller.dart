@@ -6,7 +6,6 @@ import '../../domain/models/component.dart';
 import '../../domain/models/component_fraction.dart';
 import '../../domain/services/localization_service.dart';
 import '../../domain/models/gas_reservatorio.dart';
-import '../domain/models/gas_component_result.dart';
 import 'calculos/calcular_propriedades_composicao_gas.dart';
 
 class MassaMolecularController extends ChangeNotifier {
@@ -153,9 +152,7 @@ class MassaMolecularController extends ChangeNotifier {
     final (dg, tipo) = CalcularDensidade().calcular(massaMolecular: massa);
 
     final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);
-
-    print(gasComponentResult);
-    
+        
     final inputData = GasReservatorio(
       gasComponents: gasComponentResult,
       molecularWeight: massa,
@@ -178,8 +175,8 @@ class MassaMolecularController extends ChangeNotifier {
   void _clearTabela(String contaminanteOption){
     if (contaminanteOption == "sem") {
       _selectedComponents.clear();
-    }
-    _totalFraction = 0;
+      _totalFraction = 0;
+    }    
   }
 
   void _showSnackBar(BuildContext context, String message, Color color) {

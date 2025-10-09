@@ -13,10 +13,6 @@ class CalcularPropriedadesComposicaoGas {
     }
     
     return PercorrerComponentes().pecorrer(components: components);
-
-    /*Caso que haja Contaminantes:
-    pseudocriticalPressure = (pressao*sqrt(fracaoTotal))/(pseudocriticalPressure/fracaoTotal);
-    pseudocriticalTemperature = (temperatura)/(pseudocriticalTemperature/fracaoTotal);*/
   }
 
 }
