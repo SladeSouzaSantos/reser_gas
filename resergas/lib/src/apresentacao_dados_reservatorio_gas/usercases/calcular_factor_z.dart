@@ -26,7 +26,7 @@ class CalcularFactorZ {
     double ro;
 
     while((((z - zChute).abs()) == 1) || (((z - zChute).abs()) > 0.0009)){
-      
+
       if(z != 0 || zChute != 1){
         zChute = z;
       }

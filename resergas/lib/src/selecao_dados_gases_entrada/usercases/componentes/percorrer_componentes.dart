@@ -1,3 +1,6 @@
+import 'package:resergas/src/utils/converter_unidades.dart';
+import 'package:resergas/src/utils/double_rounding.dart';
+
 import '../../../domain/models/component_fraction.dart';
 import '../../domain/models/gas_component_result.dart';
 
@@ -27,7 +30,7 @@ class PercorrerComponentes {
       yMistura += fracao;
       molecularWeightMistura += (componenteFracao.component.molecularWeight)*fracao;
       pseudocriticalPressureMistura += (componenteFracao.component.pseudocriticalPressure)*fracao;
-      pseudocriticalTemperatureMistura += (componenteFracao.component.pseudocriticalTemperature)*fracao;
+      pseudocriticalTemperatureMistura += ((componenteFracao.component.pseudocriticalTemperature.temperaturaFahrenheitToRankine())*fracao);
       zCriticoMistura += (componenteFracao.component.criticalZFactor)*fracao;
 
       if(componenteFracao.component.name == "Nitrogen"){
@@ -47,7 +50,7 @@ class PercorrerComponentes {
         yHidrocarbonetos += fracao;
         molecularWeightHidrocarbonetos += (componenteFracao.component.molecularWeight)*fracao;
         pseudocriticalPressureHidrocarbonetos += (componenteFracao.component.pseudocriticalPressure)*fracao;
-        pseudocriticalTemperatureHidrocarbonetos += (componenteFracao.component.pseudocriticalTemperature)*fracao;
+        pseudocriticalTemperatureHidrocarbonetos += ((componenteFracao.component.pseudocriticalTemperature.temperaturaFahrenheitToRankine())*fracao);
         zCriticoHidrocarbonetos += (componenteFracao.component.criticalZFactor)*fracao;
       }
 
@@ -55,7 +58,7 @@ class PercorrerComponentes {
 
     return GasComponentResult(
       yMistura: yMistura, 
-      molecularWeightMistura: molecularWeightMistura, 
+      molecularWeightMistura: molecularWeightMistura.roundToDecimalPlaces(2), 
       pseudocriticalPressureMistura: pseudocriticalPressureMistura, 
       pseudocriticalTemperatureMistura: pseudocriticalTemperatureMistura, 
       zCriticoMistura: zCriticoMistura, 
@@ -65,7 +68,7 @@ class PercorrerComponentes {
       zCriticoN2: zCriticoN2, 
       zCriticoH2S: zCriticoH2S, 
       zCriticoCO2: zCriticoCO2,
-      molecularWeightHidrocarbonetos: molecularWeightHidrocarbonetos,
+      molecularWeightHidrocarbonetos: molecularWeightHidrocarbonetos.roundToDecimalPlaces(2),
       pseudocriticalPressureHidrocarbonetos: pseudocriticalPressureHidrocarbonetos,
       pseudocriticalTemperatureHidrocarbonetos: pseudocriticalTemperatureHidrocarbonetos,
       yHidrocarbonetos: yHidrocarbonetos,

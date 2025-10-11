@@ -143,7 +143,6 @@ class DensidadeComponentesController extends ChangeNotifier {
     }
     
     _clearTabela(contaminanteOption);
-    debugPrint('Confirmação de Densidade! Tipo: $_selectedDensityType, Valor: ${densityController.text}, Contaminantes: $contaminanteOption');
     
     final double ma = CalcularMassaMolecular().calcular(densidade: densidade);
 

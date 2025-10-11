@@ -7,8 +7,7 @@ class CalcularPropriedadesComposicaoGas {
   static GasComponentResult? calcular({required List<ComponentFraction> components}){
 
     if (components.isEmpty) {
-      print('A lista de componentes está vazia ou nula.');
-
+      
       return null;
     }
     

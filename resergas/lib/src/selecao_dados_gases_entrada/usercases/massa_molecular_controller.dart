@@ -147,8 +147,7 @@ class MassaMolecularController extends ChangeNotifier {
     }
     
     _clearTabela(contaminanteOption);
-    debugPrint('Confirmação de Massa Molecular concluída! Opção: $_contaminanteOption');
-
+    
     final (dg, tipo) = CalcularDensidade().calcular(massaMolecular: massa);
 
     final gasComponentResult = CalcularPropriedadesComposicaoGas.calcular(components: _selectedComponents);

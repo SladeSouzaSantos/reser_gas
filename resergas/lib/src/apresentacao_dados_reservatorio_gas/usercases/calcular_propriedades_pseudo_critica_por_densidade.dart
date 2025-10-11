@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:resergas/src/utils/double_rounding.dart';
 
-class CalcularPropriedadesPseudoCritica {
+class CalcularPropriedadesPseudoCriticaPorDensidade {
 
   static (double, double) calcular({required String gasTipo, required double dg, required double yCO2, required double yH2S, required double yN2}){
 

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:resergas/src/utils/converter_unidades.dart';
+import 'package:resergas/src/utils/double_rounding.dart';
 import 'dart:math';
 import '../../domain/models/gas_reservatorio.dart';
 import '../../domain/services/localization_service.dart';
+import '../../selecao_dados_gases_entrada/domain/models/gas_component_result.dart';
 import '../usercases/calcular_compressibilidade.dart';
 import '../usercases/calcular_compressibilidade_reduzida.dart';
 import '../usercases/calcular_factor_z.dart';
 import '../usercases/calcular_fator_volume_formacao.dart';
 import '../usercases/calcular_massa_especifica.dart';
-import '../usercases/calcular_propriedades_pseudo_critica.dart';
+import '../usercases/calcular_propriedades_pseudo_critica_por_densidade.dart';
 import '../usercases/calcular_propriedades_pseudo_reduzidas.dart';
 import '../usercases/calcular_viscosidade.dart';
 
@@ -35,7 +38,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
   
   // Variável para armazenar a largura máxima calculada
   double? _maxUnitWidth;
-  GasReservatorio? _dadosGas; // Inicia como null
+  late GasReservatorio _dadosGas;
 
   // Unidades disponíveis (keys da LocalizationService)
   final List<String> _pressureUnits = ['unidade_pressao_psia', 'unidade_pressao_kpa', 'unidade_pressao_kgf_cm2', 'unidade_pressao_atm', 'unidade_pressao_bar'];
@@ -91,16 +94,15 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
     }
   }
 
-
   // Função placeholder para o cálculo
   void _calculateGasProperties() {
 
     final String pressaoText = _pressureController.text.trim();
-    final double? pressao = double.tryParse(pressaoText.replaceAll(',', '.'));
+    double? pressao = double.tryParse(pressaoText.replaceAll(',', '.'));
 
     final String temperaturaText = _temperatureController.text.trim();
-    final double? temperatura = double.tryParse(temperaturaText.replaceAll(',', '.'));
-    
+    double? temperatura = double.tryParse(temperaturaText.replaceAll(',', '.'));
+
     if ((pressao == null || pressao <= 0) || (temperatura == null || temperatura <= 0)) {
       setState(() {
         _calculationResult = false;
@@ -113,6 +115,30 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
     }
 
     // Lógica de qual cálculo usar (por Massa Molecular, Densidade ou Composição)
+
+    if (_selectedPressureUnit == "unidade_pressao_kpa"){
+      pressao = pressao.pressaokPaToPsia();
+    }else if (_selectedPressureUnit == "unidade_pressao_kgf_cm2"){
+      pressao = pressao.pressaokgfcm2ToPsia();
+    }else if (_selectedPressureUnit == "unidade_pressao_atm"){
+      pressao = pressao.pressaoatmToPsia();
+    }else if (_selectedPressureUnit == "unidade_pressao_bar"){
+      pressao = pressao.pressaoatmToPsia();
+    }
+
+    if (_selectedTemperatureUnit == "unidade_temperatura_f"){
+      temperatura = temperatura.temperaturaFahrenheitToRankine();
+    }else if (_selectedTemperatureUnit == "unidade_temperatura_c"){
+      temperatura = temperatura.temperaturaCelsiusToRankine();
+    }else if (_selectedTemperatureUnit == "unidade_temperatura_k"){
+      temperatura = temperatura.temperaturaKelvinToRankine();
+    }
+
+    pressao = pressao.roundToDecimalPlaces(4);
+    temperatura = temperatura.roundToDecimalPlaces(4);
+
+
+    GasComponentResult? gasComponents = _dadosGas.gasComponents;
     double pressaoPseudoCritica = 0;
     double temperaturaPseudoCritica = 0;
     double pressaoPseudoReduzida = 0;
@@ -124,42 +150,44 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
     double fatorVolumeFormacao = 0;
     double viscosidade = 0;
 
-    if((widget.gasInputData.gasComponents?.yHidrocarbonetos != null) && (widget.gasInputData.gasComponents?.yHidrocarbonetos != 0)){
-      print("Calcular, por Composição!!!");
+    if((gasComponents?.yHidrocarbonetos != null) && (gasComponents?.yHidrocarbonetos != 0)){
 
+      pressaoPseudoCritica = (gasComponents!.pseudocriticalPressureMistura).roundToDecimalPlaces(2);
+      temperaturaPseudoCritica = (gasComponents.pseudocriticalTemperatureMistura).roundToDecimalPlaces(2);
+      (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCritica, temperaturaPseudoCritica: temperaturaPseudoCritica);
+      fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));      
     } else{
-      print("Calcular, por Densidade!!!");
 
-      (pressaoPseudoCritica, temperaturaPseudoCritica) = CalcularPropriedadesPseudoCritica.calcular(dg: widget.gasInputData.gasDensity!,
-        gasTipo: widget.gasInputData.gasClassification!,
-        yCO2: widget.gasInputData.gasComponents == null ? 0 : widget.gasInputData.gasComponents!.yCO2,
-        yH2S: widget.gasInputData.gasComponents == null ? 0 : widget.gasInputData.gasComponents!.yH2S,
-        yN2: widget.gasInputData.gasComponents == null ? 0 : widget.gasInputData.gasComponents!.yN2);
+      (pressaoPseudoCritica, temperaturaPseudoCritica) = CalcularPropriedadesPseudoCriticaPorDensidade.calcular(dg: _dadosGas.gasDensity!,
+        gasTipo: _dadosGas.gasClassification!,
+        yCO2: gasComponents == null ? 0 : gasComponents.yCO2,
+        yH2S: gasComponents == null ? 0 : gasComponents.yH2S,
+        yN2: gasComponents == null ? 0 : gasComponents.yN2);
 
       (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCritica, temperaturaPseudoCritica: temperaturaPseudoCritica);
       
       fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
       
-      massaEspecifica = (CalcularMassaEspecifica.calcular(pressao: pressao, molecularWeight: widget.gasInputData.molecularWeight!, fatorCompressibilidadeGas: fatorCompressibilidadeGas, temperatura: temperatura));
-
-      compressibilidadeGas = CalcularCompressibilidade.calcular(pressaoPseudoCritica: pressaoPseudoCritica, pressaoPseudoReduzida: pressaoPseudoReduzida, temperaturaPseudoReduzida: temperaturaPseudoReduzida, fatorCompressibilidadeGas: fatorCompressibilidadeGas);
-
-      compressibilidadeGasReduzido = CalcularCompressibilidadeReduzida.calcular(pressaoPseudoCritica: pressaoPseudoCritica, compressibilidadeGas: compressibilidadeGas);
-
-      fatorVolumeFormacao = CalcularFatorVolumeFormacao.calcular(pressao: pressao, temperatura: temperatura, fatorCompressibilidadeGas: fatorCompressibilidadeGas);
-
-      viscosidade = CalcularViscosidade.calcular(pressaoPseudoReduzida: pressaoPseudoReduzida, temperaturaPseudoReduzida: temperaturaPseudoReduzida, temperatura: temperatura, gasDensity: widget.gasInputData.gasDensity!, yH2S: widget.gasInputData.gasComponents == null ? 0 : widget.gasInputData.gasComponents!.yH2S, yCO2: widget.gasInputData.gasComponents == null ? 0 : widget.gasInputData.gasComponents!.yCO2, yN2: widget.gasInputData.gasComponents == null ? 0 : widget.gasInputData.gasComponents!.yN2);
-
     }
+
+    massaEspecifica = (CalcularMassaEspecifica.calcular(pressao: pressao, molecularWeight: _dadosGas.molecularWeight!, fatorCompressibilidadeGas: fatorCompressibilidadeGas, temperatura: temperatura));
+
+    compressibilidadeGas = CalcularCompressibilidade.calcular(pressaoPseudoCritica: pressaoPseudoCritica, pressaoPseudoReduzida: pressaoPseudoReduzida, temperaturaPseudoReduzida: temperaturaPseudoReduzida, fatorCompressibilidadeGas: fatorCompressibilidadeGas);
+
+    compressibilidadeGasReduzido = CalcularCompressibilidadeReduzida.calcular(pressaoPseudoCritica: pressaoPseudoCritica, compressibilidadeGas: compressibilidadeGas);
+
+    fatorVolumeFormacao = CalcularFatorVolumeFormacao.calcular(pressao: pressao, temperatura: temperatura, fatorCompressibilidadeGas: fatorCompressibilidadeGas);
+
+    viscosidade = CalcularViscosidade.calcular(pressaoPseudoReduzida: pressaoPseudoReduzida, temperaturaPseudoReduzida: temperaturaPseudoReduzida, temperatura: temperatura, gasDensity: _dadosGas.gasDensity!, yH2S: gasComponents == null ? 0 : gasComponents.yH2S, yCO2: gasComponents == null ? 0 : gasComponents.yCO2, yN2: gasComponents == null ? 0 : gasComponents.yN2);
     
     setState(() {
       _calculationResult = true;
       _dadosGas = GasReservatorio(
           reservoirPressure: pressao,
           reservoirTemperature: temperatura,
-          gasDensity: widget.gasInputData.gasDensity,
-          molecularWeight: widget.gasInputData.molecularWeight!,
-          gasClassification: widget.gasInputData.gasClassification,
+          gasDensity: _dadosGas.gasDensity,
+          molecularWeight: _dadosGas.molecularWeight!,
+          gasClassification: _dadosGas.gasClassification,
           pseudocriticalPressure: pressaoPseudoCritica,
           pseudocriticalTemperature: temperaturaPseudoCritica,
           pseudoreducedPressure: pressaoPseudoReduzida,
@@ -169,7 +197,8 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           compressibility: compressibilidadeGas,
           reducedCompressibility: compressibilidadeGasReduzido,
           gasVolumeFactor: fatorVolumeFormacao,
-          gasViscosity: viscosidade
+          gasViscosity: viscosidade,
+          gasComponents: gasComponents
       );
     });
   }
@@ -364,18 +393,20 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
                     const SizedBox(height: 16),
                     
                     // Exibição das propriedades (prop_ppc, prop_tpc, etc., já estão traduzidas nas chamadas)
-                    _buildPropertyRow('prop_massa_molecular', _dadosGas!.molecularWeight, 'unidade_massa_molecular'),
-                    _buildPropertyRow('prop_densidade', _dadosGas!.gasDensity, 'unidade_adimensional'),
-                    _buildPropertyRow('prop_ppc', _dadosGas!.pseudocriticalPressure, 'unidade_pressao_psia'),
-                    _buildPropertyRow('prop_tpc', _dadosGas!.pseudocriticalTemperature, 'unidade_temperatura_r'),
-                    _buildPropertyRow('prop_ppr', _dadosGas!.pseudoreducedPressure, 'unidade_adimensional'),
-                    _buildPropertyRow('prop_tpr', _dadosGas!.pseudoreducedTemperature, 'unidade_adimensional'),
-                    _buildPropertyRow('prop_fator_compressibilidade', _dadosGas!.compressibilityFactor, 'unidade_adimensional'),
-                    _buildPropertyRow('prop_massa_especifica', _dadosGas!.gasSpecificGravity, 'unidade_massa_especifica'),
-                    _buildPropertyRow('prop_viscosidade', _dadosGas!.gasViscosity, 'unidade_viscosidade'),                    
-                    _buildPropertyRow('prop_compressibilidade', _dadosGas!.compressibility, 'unidade_compressibilidade'),                    
-                    _buildPropertyRow('prop_compressibilidade_reduzida', _dadosGas!.reducedCompressibility, 'unidade_adimensional'),
-                    _buildPropertyRow('prop_fator_volume_formacao', _dadosGas!.gasVolumeFactor, 'unidade_fator_volume_formacao'),
+                    _buildPropertyRow('label_pressao_reservatorio', _dadosGas.reservoirPressure, 'unidade_pressao_psia'),
+                    _buildPropertyRow('label_temperatura_reservatorio', _dadosGas.reservoirTemperature, 'unidade_temperatura_r'),
+                    _buildPropertyRow('prop_massa_molecular', _dadosGas.molecularWeight, 'unidade_massa_molecular'),
+                    _buildPropertyRow('prop_densidade', _dadosGas.gasDensity, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_ppc', _dadosGas.pseudocriticalPressure, 'unidade_pressao_psia'),
+                    _buildPropertyRow('prop_tpc', _dadosGas.pseudocriticalTemperature, 'unidade_temperatura_r'),
+                    _buildPropertyRow('prop_ppr', _dadosGas.pseudoreducedPressure, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_tpr', _dadosGas.pseudoreducedTemperature, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_fator_compressibilidade', _dadosGas.compressibilityFactor, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_massa_especifica', _dadosGas.gasSpecificGravity, 'unidade_massa_especifica'),
+                    _buildPropertyRow('prop_viscosidade', _dadosGas.gasViscosity, 'unidade_viscosidade'),                    
+                    _buildPropertyRow('prop_compressibilidade', _dadosGas.compressibility, 'unidade_compressibilidade'),                    
+                    _buildPropertyRow('prop_compressibilidade_reduzida', _dadosGas.reducedCompressibility, 'unidade_adimensional'),
+                    _buildPropertyRow('prop_fator_volume_formacao', _dadosGas.gasVolumeFactor, 'unidade_fator_volume_formacao'),
                   ],
                 ],
               ),
