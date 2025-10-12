@@ -11,13 +11,19 @@ class GasComponentResult{
   double molecularWeightHidrocarbonetos;
   double pseudocriticalPressureHidrocarbonetos;
   double pseudocriticalTemperatureHidrocarbonetos;
-  double zCriticoHidrocarbonetos;    
+  double zCriticoHidrocarbonetos;
+  double pseudocriticalPressureN2;
+  double pseudocriticalTemperatureN2;    
   double zCriticoN2;
+  double pseudocriticalPressureH2S;
+  double pseudocriticalTemperatureH2S; 
   double zCriticoH2S;
+  double pseudocriticalPressureCO2;
+  double pseudocriticalTemperatureCO2; 
   double zCriticoCO2;
 
   GasComponentResult(
-    {
+    {      
       required this.yMistura,
       required this.yHidrocarbonetos,
       required this.yN2,
@@ -31,6 +37,12 @@ class GasComponentResult{
       required this.pseudocriticalPressureHidrocarbonetos,
       required this.pseudocriticalTemperatureHidrocarbonetos,
       required this.zCriticoHidrocarbonetos,    
+      required this.pseudocriticalPressureN2,
+      required this.pseudocriticalTemperatureN2,
+      required this.pseudocriticalPressureH2S,
+      required this.pseudocriticalTemperatureH2S,
+      required this.pseudocriticalPressureCO2,
+      required this.pseudocriticalTemperatureCO2,
       required this.zCriticoN2,
       required this.zCriticoH2S,
       required this.zCriticoCO2

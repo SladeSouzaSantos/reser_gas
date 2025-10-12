@@ -87,13 +87,13 @@ class ComponentsGPSA {
       pseudocriticalTemperature: 651.33, 
       criticalZFactor: 0.250,
     ),    
-    'Hydrogen': Component(
+    /*'Hydrogen': Component(
       name: "Hydrogen",
       molecularWeight: 2.016,
       pseudocriticalPressure: 188.0,
       pseudocriticalTemperature: -399.47,
       criticalZFactor: 0.304,
-    ),
+    ),*/
     'Nitrogen': Component(
       name: "Nitrogen",
       molecularWeight: 28.01,
@@ -101,13 +101,13 @@ class ComponentsGPSA {
       pseudocriticalTemperature: -232.47, 
       criticalZFactor: 0.291,
     ),
-    'Oxygen': Component(
+    /*'Oxygen': Component(
       name: "Oxygen",
       molecularWeight: 32.0,
       pseudocriticalPressure: 730.0,
       pseudocriticalTemperature: -181.47, 
       criticalZFactor: 0.292,
-    ),
+    ),*/
     'HydrogenSulfide': Component(
       name: "HydrogenSulfide",
       molecularWeight: 34.08,

@@ -20,6 +20,9 @@ class DensidadeComponentesController extends ChangeNotifier {
   
   String _selectedDensityType = 'Seco';
   String get selectedDensityType => _selectedDensityType;
+
+  String _contaminanteOption = 'sem';
+  String get contaminanteOption => _contaminanteOption;
   
   final TextEditingController fractionController = TextEditingController();
   
@@ -38,6 +41,17 @@ class DensidadeComponentesController extends ChangeNotifier {
     return _localizationService.getTranslation(key, _currentLanguage);
   }
 
+  void handleContaminanteChange(String? newValue) {
+    if (newValue != null) {
+      _contaminanteOption = newValue;
+      
+      if (newValue == 'sem') {
+        _clearTabela(newValue); 
+      }
+      notifyListeners();
+    }
+  }
+  
   void handleDensityChange(String? newValue) {
     if (newValue != null) {
       _selectedDensityType = newValue;
@@ -112,8 +126,7 @@ class DensidadeComponentesController extends ChangeNotifier {
 
   // --- NOVO MÉTODO: Validação Completa da Aba Densidade (Agora no Controller) ---
   void validateAndConfirmDensidade({
-    required BuildContext context,
-    required String contaminanteOption,
+    required BuildContext context
   }) {
     // 1. Validação Densidade
     final String densidadeText = densityController.text.trim();
@@ -125,13 +138,13 @@ class DensidadeComponentesController extends ChangeNotifier {
     }
 
     // 2. Validação Contaminantes: Se 'com', deve ter componentes
-    if (contaminanteOption == 'com' && _selectedComponents.isEmpty) {
+    if (_contaminanteOption == 'com' && _selectedComponents.isEmpty) {
       _showSnackBar(context, getTranslation('erro_sem_componentes'), Colors.red);
       return;
     }
 
     // 3. Validação Soma de Fração (só se 'com contaminantes')
-    if (contaminanteOption == 'com') {
+    if (_contaminanteOption  == 'com') {
       if (_totalFraction <= 0.0) {
         _showSnackBar(context, getTranslation('erro_soma_menor_igual_zero'), Colors.red);
         return;
@@ -142,7 +155,7 @@ class DensidadeComponentesController extends ChangeNotifier {
       }
     }
     
-    _clearTabela(contaminanteOption);
+    _clearTabela(_contaminanteOption);
     
     final double ma = CalcularMassaMolecular().calcular(densidade: densidade);
 

@@ -5,22 +5,21 @@ import '../../domain/models/component_fraction.dart';
 import 'tabela/bloco_entrada_componentes.dart'; 
 
 typedef GetTranslation = String Function(String key);
-typedef BuildConfirmButton = Widget Function(VoidCallback onPressed);
+typedef BuildConfirmButton = Function(VoidCallback onPressed);
 
 typedef OnComponentSelect = ValueChanged<Component?>;
 typedef OnRemoveComponent = Function(ComponentFraction);
 
-typedef OnConfirmDensidade = void Function({
-  required BuildContext context, 
-  required String contaminanteOption,
-});
+typedef OnConfirmDensidade = void Function({required BuildContext context,});
 
-class EntradaDensidadeWidget extends StatefulWidget {
+class EntradaDensidadeWidget extends StatelessWidget  {
   
   final GetTranslation getTranslation;
   final String selectedDensityType;
   final ValueChanged<String?> onDensityChange;
   final TextEditingController densityController;
+  final String contaminanteOption;
+  final ValueChanged<String?> onContaminanteChange;
   final OnConfirmDensidade onConfirm;
   final BuildConfirmButton buildConfirmButton;
   
@@ -40,6 +39,8 @@ class EntradaDensidadeWidget extends StatefulWidget {
     required this.selectedDensityType,
     required this.onDensityChange,
     required this.densityController,
+    required this.contaminanteOption,
+    required this.onContaminanteChange,
     required this.onConfirm, 
     required this.buildConfirmButton,
     required this.currentLanguage,
@@ -52,27 +53,12 @@ class EntradaDensidadeWidget extends StatefulWidget {
     required this.totalFraction,
     required this.availableComponentKeys,
   });
-
-  @override
-  State<EntradaDensidadeWidget> createState() => _EntradaDensidadeWidgetState();
-}
-
-class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
   
-  String contaminanteOption = 'sem';
-  
-  void _triggerValidation() {
-    widget.onConfirm(
-      context: context,
-      contaminanteOption: contaminanteOption,
-    );
-  }
-
   @override
-  Widget build(BuildContext context) {
-    final String densityUnit = widget.selectedDensityType == 'Seca' 
-      ? widget.getTranslation('densidade_seco') 
-      : widget.getTranslation('densidade_umido'); 
+  build(BuildContext context) {
+    final String densityUnit = selectedDensityType == 'Seco' 
+      ? getTranslation('densidade_seco') 
+      : getTranslation('densidade_umido');
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
@@ -81,7 +67,7 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
         children: [
           
           Text(
-            widget.getTranslation('aba_densidade'),
+            getTranslation('aba_densidade'),
             style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
@@ -90,19 +76,19 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
             children: [
               RadioListTile<String>(
                 contentPadding: EdgeInsets.zero,
-                title: Text(widget.getTranslation('densidade_seco'), style: const TextStyle(color: Colors.white70)),
+                title: Text(getTranslation('densidade_seco'), style: const TextStyle(color: Colors.white70)),
                 value: 'Seco',
-                groupValue: widget.selectedDensityType,
-                onChanged: widget.onDensityChange,
+                groupValue: selectedDensityType,
+                onChanged: onDensityChange,
                 activeColor: Colors.amber,
                 controlAffinity: ListTileControlAffinity.leading,
               ),
               RadioListTile<String>(
                 contentPadding: EdgeInsets.zero,
-                title: Text(widget.getTranslation('densidade_umido'), style: const TextStyle(color: Colors.white70)),
+                title: Text(getTranslation('densidade_umido'), style: const TextStyle(color: Colors.white70)),
                 value: 'Úmido',
-                groupValue: widget.selectedDensityType,
-                onChanged: widget.onDensityChange,
+                groupValue: selectedDensityType,
+                onChanged: onDensityChange,
                 activeColor: Colors.amber,
                 controlAffinity: ListTileControlAffinity.leading,
               ),
@@ -112,11 +98,11 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
           const SizedBox(height: 32),
           
           TextField(
-            controller: widget.densityController,
+            controller: densityController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              labelText: widget.getTranslation('label_densidade').replaceAll('{0}', densityUnit),
+              labelText: getTranslation('label_densidade').replaceAll('{0}', densityUnit),
               labelStyle: const TextStyle(color: Colors.amber),
               enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white54),),
               focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.amber),),
@@ -126,32 +112,24 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
           const SizedBox(height: 32),
           
           Text(
-            widget.getTranslation('label_contaminantes'),
+            getTranslation('label_contaminantes'),
             style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
           ),
           RadioListTile<String>(
             contentPadding: EdgeInsets.zero,
-            title: Text(widget.getTranslation('sem_contaminantes'), style: const TextStyle(color: Colors.white70)),
+            title: Text(getTranslation('sem_contaminantes'), style: const TextStyle(color: Colors.white70)),
             value: 'sem',
             groupValue: contaminanteOption,
-            onChanged: (value) {
-              setState(() {
-                contaminanteOption = value!;
-              });
-            },
+            onChanged: onContaminanteChange,
             activeColor: Colors.amber,
             controlAffinity: ListTileControlAffinity.leading,
           ),
           RadioListTile<String>(
             contentPadding: EdgeInsets.zero,
-            title: Text(widget.getTranslation('com_contaminantes'), style: const TextStyle(color: Colors.white70)),
+            title: Text(getTranslation('com_contaminantes'), style: const TextStyle(color: Colors.white70)),
             value: 'com',
             groupValue: contaminanteOption,
-            onChanged: (value) {
-              setState(() {
-                contaminanteOption = value!;
-              });
-            },
+            onChanged: onContaminanteChange,
             activeColor: Colors.amber,
             controlAffinity: ListTileControlAffinity.leading,
           ),
@@ -160,22 +138,22 @@ class _EntradaDensidadeWidgetState extends State<EntradaDensidadeWidget> {
           
           if (contaminanteOption == 'com')
             BlocoEntradaComponentesConteudo(
-              getTranslation: widget.getTranslation,
-              currentLanguage: widget.currentLanguage,
-              selectedComponents: widget.selectedComponents,
-              selectedComponentToAdd: widget.selectedComponentToAdd,
-              onComponentSelect: widget.onComponentSelect,
-              fractionController: widget.fractionController,
-              onAddComponentFraction: widget.onAddComponentFraction,
-              onRemoveComponent: widget.onRemoveComponent,
-              totalFraction: widget.totalFraction,
-              availableComponentKeys: widget.availableComponentKeys, 
+              getTranslation: getTranslation,
+              currentLanguage: currentLanguage,
+              selectedComponents: selectedComponents,
+              selectedComponentToAdd: selectedComponentToAdd,
+              onComponentSelect: onComponentSelect,
+              fractionController: fractionController,
+              onAddComponentFraction: onAddComponentFraction,
+              onRemoveComponent: onRemoveComponent,
+              totalFraction: totalFraction,
+              availableComponentKeys: availableComponentKeys, 
             ),
 
           const SizedBox(height: 32),
           
           Center(
-            child: widget.buildConfirmButton(_triggerValidation),
+            child: buildConfirmButton(() => onConfirm(context: context)),
           ),
           
         ],

@@ -123,15 +123,13 @@ class _TelaEntradaGasesState extends State<TelaEntradaGases> {
               getTranslation: _getTranslation,
               selectedDensityType: _densidadeComponentesController.selectedDensityType,
               onDensityChange: _densidadeComponentesController.handleDensityChange,
+              onContaminanteChange: _densidadeComponentesController.handleContaminanteChange,
+              contaminanteOption: _densidadeComponentesController.contaminanteOption,              
               densityController: _densidadeComponentesController.densityController,              
-              onConfirm: ({required BuildContext context, required String contaminanteOption}) => 
-                  _densidadeComponentesController.validateAndConfirmDensidade(
-                      context: context, 
-                      contaminanteOption: contaminanteOption
-                  ),              
+              onConfirm: ({required BuildContext context}) => _densidadeComponentesController.validateAndConfirmDensidade(context: context),              
               currentLanguage: _currentLanguage,
               selectedComponents: _densidadeComponentesController.selectedComponents,
-              selectedComponentToAdd: _densidadeComponentesController.selectedComponentToAdd,
+              selectedComponentToAdd: _densidadeComponentesController.selectedComponentToAdd,              
               onComponentSelect: _densidadeComponentesController.handleComponentSelect,
               onAddComponentFraction: () => _densidadeComponentesController.addComponentFraction(context),
               onRemoveComponent: (cf) => _densidadeComponentesController.removeComponent(context, cf),

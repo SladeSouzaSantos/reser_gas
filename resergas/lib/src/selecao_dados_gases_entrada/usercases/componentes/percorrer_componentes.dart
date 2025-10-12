@@ -20,8 +20,14 @@ class PercorrerComponentes {
     double pseudocriticalPressureHidrocarbonetos = 0;
     double pseudocriticalTemperatureHidrocarbonetos = 0;
     double zCriticoHidrocarbonetos = 0;    
+    double pseudocriticalPressureN2 = 0;
+    double pseudocriticalTemperatureN2 = 0;    
     double zCriticoN2 = 0;
+    double pseudocriticalPressureH2S = 0;
+    double pseudocriticalTemperatureH2S = 0; 
     double zCriticoH2S = 0;
+    double pseudocriticalPressureCO2 = 0;
+    double pseudocriticalTemperatureCO2 = 0; 
     double zCriticoCO2 = 0;
     
     for (var componenteFracao in components){
@@ -36,16 +42,22 @@ class PercorrerComponentes {
       if(componenteFracao.component.name == "Nitrogen"){
         yN2 += fracao;
         zCriticoN2 += (componenteFracao.component.criticalZFactor)*fracao;
+        pseudocriticalPressureN2 += (componenteFracao.component.pseudocriticalPressure)*fracao;
+        pseudocriticalTemperatureN2 += (componenteFracao.component.pseudocriticalTemperature.temperaturaFahrenheitToRankine())*fracao;
       }
 
       else if(componenteFracao.component.name == "HydrogenSulfide"){
         yH2S += fracao;
         zCriticoH2S += (componenteFracao.component.criticalZFactor)*fracao;
+        pseudocriticalPressureH2S += (componenteFracao.component.pseudocriticalPressure)*fracao;
+        pseudocriticalTemperatureH2S += (componenteFracao.component.pseudocriticalTemperature.temperaturaFahrenheitToRankine())*fracao;
       }
 
       else if(componenteFracao.component.name == "CarbonDioxide"){
         yCO2 += fracao;
         zCriticoCO2 += (componenteFracao.component.criticalZFactor)*fracao;
+        pseudocriticalPressureCO2 += (componenteFracao.component.pseudocriticalPressure)*fracao;
+        pseudocriticalTemperatureCO2 += (componenteFracao.component.pseudocriticalTemperature.temperaturaFahrenheitToRankine())*fracao;
       }else{
         yHidrocarbonetos += fracao;
         molecularWeightHidrocarbonetos += (componenteFracao.component.molecularWeight)*fracao;
@@ -72,7 +84,13 @@ class PercorrerComponentes {
       pseudocriticalPressureHidrocarbonetos: pseudocriticalPressureHidrocarbonetos,
       pseudocriticalTemperatureHidrocarbonetos: pseudocriticalTemperatureHidrocarbonetos,
       yHidrocarbonetos: yHidrocarbonetos,
-      zCriticoHidrocarbonetos: zCriticoHidrocarbonetos
+      zCriticoHidrocarbonetos: zCriticoHidrocarbonetos,
+      pseudocriticalPressureCO2: pseudocriticalPressureCO2,
+      pseudocriticalPressureH2S: pseudocriticalPressureH2S,
+      pseudocriticalPressureN2: pseudocriticalPressureN2,
+      pseudocriticalTemperatureCO2: pseudocriticalTemperatureCO2,
+      pseudocriticalTemperatureH2S: pseudocriticalTemperatureH2S,
+      pseudocriticalTemperatureN2: pseudocriticalTemperatureN2
     );
   }
 }

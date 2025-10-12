@@ -89,13 +89,13 @@ class ComponentsAdalbertoRosa {
       criticalZFactor: 0.247,
     ),
     
-    'Hydrogen': Component(
+    /*'Hydrogen': Component(
       name: "Hydrogen",
       molecularWeight: 2.016,
       pseudocriticalPressure: 188.0,
       pseudocriticalTemperature: -399.8,
       criticalZFactor: 0.315,
-    ),
+    ),*/
 
     'Nitrogen': Component(
       name: "Nitrogen",
@@ -105,13 +105,13 @@ class ComponentsAdalbertoRosa {
       criticalZFactor: 0.289,
     ),
 
-    'Oxygen': Component(
+    /*'Oxygen': Component(
       name: "Oxygen",
       molecularWeight: 32.0,
       pseudocriticalPressure: 730.0,
       pseudocriticalTemperature: -181.8,
       criticalZFactor: 0.287,
-    ),
+    ),*/
 
     'HydrogenSulfide': Component(
       name: "HydrogenSulfide",

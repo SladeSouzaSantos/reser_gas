@@ -10,6 +10,7 @@ import '../usercases/calcular_compressibilidade_reduzida.dart';
 import '../usercases/calcular_factor_z.dart';
 import '../usercases/calcular_fator_volume_formacao.dart';
 import '../usercases/calcular_massa_especifica.dart';
+import '../usercases/calcular_propriedades_pseudo_critica_por_composicao.dart';
 import '../usercases/calcular_propriedades_pseudo_critica_por_densidade.dart';
 import '../usercases/calcular_propriedades_pseudo_reduzidas.dart';
 import '../usercases/calcular_viscosidade.dart';
@@ -143,21 +144,96 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
     double temperaturaPseudoCritica = 0;
     double pressaoPseudoReduzida = 0;
     double temperaturaPseudoReduzida = 0;
-    double fatorCompressibilidadeGas = 0;
+    double fatorCompressibilidadeGas = 0;    
     double massaEspecifica = 0;
     double compressibilidadeGas = 0;
     double compressibilidadeGasReduzido = 0;
     double fatorVolumeFormacao = 0;
     double viscosidade = 0;
 
-    if((gasComponents?.yHidrocarbonetos != null) && (gasComponents?.yHidrocarbonetos != 0)){
+    bool isComposicaoGas = (gasComponents?.yHidrocarbonetos != null) && (gasComponents!.yHidrocarbonetos != 0);
 
-      pressaoPseudoCritica = (gasComponents!.pseudocriticalPressureMistura).roundToDecimalPlaces(2);
-      temperaturaPseudoCritica = (gasComponents.pseudocriticalTemperatureMistura).roundToDecimalPlaces(2);
-      (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCritica, temperaturaPseudoCritica: temperaturaPseudoCritica);
-      fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));      
+    if(isComposicaoGas){
+      double pressaoPseudoCriticaCO2 = 0;
+      double temperaturaPseudoCriticaCO2 = 0;
+      double pressaoPseudoReduzidaCO2 = 0;
+      double temperaturaPseudoReduzidaCO2 = 0;
+      double fatorCompressibilidadeGasCO2 = 0;
+      double pressaoPseudoCriticaN2 = 0;
+      double temperaturaPseudoCriticaN2 = 0;
+      double pressaoPseudoReduzidaN2 = 0;
+      double temperaturaPseudoReduzidaN2 = 0;
+      double fatorCompressibilidadeGasN2 = 0;
+      double pressaoPseudoCriticaH2S = 0;
+      double temperaturaPseudoCriticaH2S = 0;
+      double pressaoPseudoReduzidaH2S = 0;
+      double temperaturaPseudoReduzidaH2S = 0;
+      double fatorCompressibilidadeGasH2S = 0;
+
+      bool isContemN2 = (gasComponents.yN2 > 0);
+      bool isContemCO2 = (gasComponents.yCO2 > 0);
+      bool isContemH2S = (gasComponents.yH2S > 0);
+
+      if(isContemCO2){
+
+        (pressaoPseudoCriticaCO2, temperaturaPseudoCriticaCO2) = CalcularPropriedadesPseudoCriticaPorComposicao.calcular(
+          pressaoPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalPressureCO2).roundToDecimalPlaces(2),
+          temperaturaPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalTemperatureCO2).roundToDecimalPlaces(2),
+          fracaoHidrocarboneto: gasComponents.yCO2);
+
+        (pressaoPseudoReduzidaCO2, temperaturaPseudoReduzidaCO2) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCriticaCO2, temperaturaPseudoCritica: temperaturaPseudoCriticaCO2, fracaoHidrocarbonetos: gasComponents.yCO2);
+        fatorCompressibilidadeGasCO2 = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzidaCO2, tpr: temperaturaPseudoReduzidaCO2));
+
+      }
+
+      if(isContemN2){
+
+        (pressaoPseudoCriticaN2, temperaturaPseudoCriticaN2) = CalcularPropriedadesPseudoCriticaPorComposicao.calcular(
+          pressaoPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalPressureN2).roundToDecimalPlaces(2),
+          temperaturaPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalTemperatureN2).roundToDecimalPlaces(2),
+          fracaoHidrocarboneto: gasComponents.yN2);
+
+        (pressaoPseudoReduzidaN2, temperaturaPseudoReduzidaN2) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCriticaN2, temperaturaPseudoCritica: temperaturaPseudoCriticaN2, fracaoHidrocarbonetos: gasComponents.yN2);
+        fatorCompressibilidadeGasN2 = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzidaN2, tpr: temperaturaPseudoReduzidaN2));
+
+      }
+
+      if(isContemH2S){
+        
+        (pressaoPseudoCriticaH2S, temperaturaPseudoCriticaH2S) = CalcularPropriedadesPseudoCriticaPorComposicao.calcular(
+          pressaoPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalPressureH2S).roundToDecimalPlaces(2),
+          temperaturaPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalTemperatureH2S).roundToDecimalPlaces(2),
+          fracaoHidrocarboneto: gasComponents.yH2S);
+        
+        (pressaoPseudoReduzidaH2S, temperaturaPseudoReduzidaH2S) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCriticaH2S, temperaturaPseudoCritica: temperaturaPseudoCriticaH2S, fracaoHidrocarbonetos: gasComponents.yH2S);
+        fatorCompressibilidadeGasH2S = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzidaH2S, tpr: temperaturaPseudoReduzidaH2S));
+
+      }
+
+      if((gasComponents.yHidrocarbonetos > 0) && (isContemCO2 || isContemH2S || isContemN2)){
+        (pressaoPseudoCritica, temperaturaPseudoCritica) = CalcularPropriedadesPseudoCriticaPorComposicao.calcular(
+          pressaoPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalPressureHidrocarbonetos).roundToDecimalPlaces(2),
+          temperaturaPseudoCriticaHidrocarboneto: (gasComponents.pseudocriticalTemperatureHidrocarbonetos).roundToDecimalPlaces(2),
+          fracaoHidrocarboneto: gasComponents.yHidrocarbonetos);
+        (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(
+          pressao: pressao, 
+          temperatura: temperatura, 
+          pressaoPseudoCritica: pressaoPseudoCritica, 
+          temperaturaPseudoCritica: temperaturaPseudoCritica, 
+          fracaoHidrocarbonetos: gasComponents.yHidrocarbonetos);
+        fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
+
+        fatorCompressibilidadeGas = ((gasComponents.yCO2*fatorCompressibilidadeGasCO2) + (gasComponents.yN2*fatorCompressibilidadeGasN2) + (gasComponents.yH2S*fatorCompressibilidadeGasH2S) + (gasComponents.yHidrocarbonetos*fatorCompressibilidadeGas)).roundToDecimalPlaces(4);
+
+      }else{
+        pressaoPseudoCritica = (gasComponents.pseudocriticalPressureMistura).roundToDecimalPlaces(2);
+        temperaturaPseudoCritica = (gasComponents.pseudocriticalTemperatureMistura).roundToDecimalPlaces(2);
+        (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCritica, temperaturaPseudoCritica: temperaturaPseudoCritica);
+        fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
+      }
+
     } else{
-
+      
       (pressaoPseudoCritica, temperaturaPseudoCritica) = CalcularPropriedadesPseudoCriticaPorDensidade.calcular(dg: _dadosGas.gasDensity!,
         gasTipo: _dadosGas.gasClassification!,
         yCO2: gasComponents == null ? 0 : gasComponents.yCO2,
