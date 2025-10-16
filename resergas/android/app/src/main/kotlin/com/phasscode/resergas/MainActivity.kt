@@ -1,4 +1,4 @@
-package com.example.resergas
+package com.phasscode.resergas
 
 import io.flutter.embedding.android.FlutterActivity
 

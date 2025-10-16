@@ -3,7 +3,11 @@ import 'package:resergas/src/utils/double_rounding.dart';
 
 class CalcularCompressibilidade {
 
-  static double calcular({required double pressaoPseudoCritica, required double pressaoPseudoReduzida, required double temperaturaPseudoReduzida, required double fatorCompressibilidadeGas}){
+  static double? calcular({required double pressaoPseudoCritica, required double pressaoPseudoReduzida, required double temperaturaPseudoReduzida, required double? fatorCompressibilidadeGas}){
+    
+    if((pressaoPseudoCritica == 0) || (pressaoPseudoReduzida == 0) || (temperaturaPseudoReduzida == 0) || (fatorCompressibilidadeGas == null) || (fatorCompressibilidadeGas == 0)){
+      return null;
+    }
     
     return ((1 / (pressaoPseudoReduzida * pressaoPseudoCritica)) + ((1 / (fatorCompressibilidadeGas * pressaoPseudoCritica)) * ((3.52 / (pow(10, (0.9813 * temperaturaPseudoReduzida)))) - ((0.548 * pressaoPseudoReduzida) / (pow(10, (0.8157 * temperaturaPseudoReduzida))))))).roundToDecimalPlaces(6);
   }
