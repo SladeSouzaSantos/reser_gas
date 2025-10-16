@@ -7,7 +7,7 @@ import 'package:resergas/src/utils/double_rounding.dart';
 // ====================================================================
 class CalcularFactorZ {
 
-  double calcular({required double ppr, required double tpr}){
+  static double? calcular({required double ppr, required double tpr}){
 
     const double a1 = 0.3265;
     const double a2 = -1.0700;
@@ -25,7 +25,9 @@ class CalcularFactorZ {
     double zChute = 1;
     double ro;
 
-    while((((z - zChute).abs()) == 1) || (((z - zChute).abs()) > 0.0009)){
+    int interacoes = 0;
+
+    while((((z - zChute).abs()) == 1) || (((z - zChute).abs()) > 0.000001)){
 
       if(z != 0 || zChute != 1){
         zChute = z;
@@ -38,9 +40,14 @@ class CalcularFactorZ {
       + (((a6) + (a7/tpr) + (a8/pow(tpr, 2))) * (pow(ro, 2))) 
       - ((a9) * ((a7/tpr) + (a8/pow(tpr, 2))) * (pow(ro, 5))) 
       + ((a10) * ((1) + (a11*pow(ro, 2))) * ((pow(ro, 2)/pow(tpr, 3)) * (pow(e, (-a11 * pow(ro, 2)))))));
+
+      interacoes++;
+
+      if(interacoes == 1000) return null;
+
     }
 
-    return z.roundToDecimalPlaces(3);
+    return z.roundToDecimalPlaces(4);
   }
 
 }

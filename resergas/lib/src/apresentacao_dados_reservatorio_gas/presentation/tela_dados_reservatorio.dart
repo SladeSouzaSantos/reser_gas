@@ -110,7 +110,11 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_getTranslation('erro_inserir_valores_validos'))),
+        SnackBar(
+          content: Text(_getTranslation('erro_inserir_valores_validos')),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 2),
+        ),
       );
       return;
     }
@@ -144,11 +148,11 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
     double temperaturaPseudoCritica = 0;
     double pressaoPseudoReduzida = 0;
     double temperaturaPseudoReduzida = 0;
-    double fatorCompressibilidadeGas = 0;    
-    double massaEspecifica = 0;
-    double compressibilidadeGas = 0;
-    double compressibilidadeGasReduzido = 0;
-    double fatorVolumeFormacao = 0;
+    double? fatorCompressibilidadeGas = 0;    
+    double? massaEspecifica = 0;
+    double? compressibilidadeGas = 0;
+    double? compressibilidadeGasReduzido = 0;
+    double? fatorVolumeFormacao = 0;
     double viscosidade = 0;
 
     bool isComposicaoGas = (gasComponents?.yHidrocarbonetos != null) && (gasComponents!.yHidrocarbonetos != 0);
@@ -158,17 +162,17 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
       double temperaturaPseudoCriticaCO2 = 0;
       double pressaoPseudoReduzidaCO2 = 0;
       double temperaturaPseudoReduzidaCO2 = 0;
-      double fatorCompressibilidadeGasCO2 = 0;
+      double? fatorCompressibilidadeGasCO2 = 0;
       double pressaoPseudoCriticaN2 = 0;
       double temperaturaPseudoCriticaN2 = 0;
       double pressaoPseudoReduzidaN2 = 0;
       double temperaturaPseudoReduzidaN2 = 0;
-      double fatorCompressibilidadeGasN2 = 0;
+      double? fatorCompressibilidadeGasN2 = 0;
       double pressaoPseudoCriticaH2S = 0;
       double temperaturaPseudoCriticaH2S = 0;
       double pressaoPseudoReduzidaH2S = 0;
       double temperaturaPseudoReduzidaH2S = 0;
-      double fatorCompressibilidadeGasH2S = 0;
+      double? fatorCompressibilidadeGasH2S = 0;
 
       bool isContemN2 = (gasComponents.yN2 > 0);
       bool isContemCO2 = (gasComponents.yCO2 > 0);
@@ -182,7 +186,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           fracaoHidrocarboneto: gasComponents.yCO2);
 
         (pressaoPseudoReduzidaCO2, temperaturaPseudoReduzidaCO2) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCriticaCO2, temperaturaPseudoCritica: temperaturaPseudoCriticaCO2, fracaoHidrocarbonetos: gasComponents.yCO2);
-        fatorCompressibilidadeGasCO2 = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzidaCO2, tpr: temperaturaPseudoReduzidaCO2));
+        fatorCompressibilidadeGasCO2 = (CalcularFactorZ.calcular(ppr: pressaoPseudoReduzidaCO2, tpr: temperaturaPseudoReduzidaCO2));
 
       }
 
@@ -194,7 +198,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           fracaoHidrocarboneto: gasComponents.yN2);
 
         (pressaoPseudoReduzidaN2, temperaturaPseudoReduzidaN2) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCriticaN2, temperaturaPseudoCritica: temperaturaPseudoCriticaN2, fracaoHidrocarbonetos: gasComponents.yN2);
-        fatorCompressibilidadeGasN2 = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzidaN2, tpr: temperaturaPseudoReduzidaN2));
+        fatorCompressibilidadeGasN2 = (CalcularFactorZ.calcular(ppr: pressaoPseudoReduzidaN2, tpr: temperaturaPseudoReduzidaN2));
 
       }
 
@@ -206,7 +210,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           fracaoHidrocarboneto: gasComponents.yH2S);
         
         (pressaoPseudoReduzidaH2S, temperaturaPseudoReduzidaH2S) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCriticaH2S, temperaturaPseudoCritica: temperaturaPseudoCriticaH2S, fracaoHidrocarbonetos: gasComponents.yH2S);
-        fatorCompressibilidadeGasH2S = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzidaH2S, tpr: temperaturaPseudoReduzidaH2S));
+        fatorCompressibilidadeGasH2S = (CalcularFactorZ.calcular(ppr: pressaoPseudoReduzidaH2S, tpr: temperaturaPseudoReduzidaH2S));
 
       }
 
@@ -221,15 +225,17 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
           pressaoPseudoCritica: pressaoPseudoCritica, 
           temperaturaPseudoCritica: temperaturaPseudoCritica, 
           fracaoHidrocarbonetos: gasComponents.yHidrocarbonetos);
-        fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
+        fatorCompressibilidadeGas = (CalcularFactorZ.calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
 
-        fatorCompressibilidadeGas = ((gasComponents.yCO2*fatorCompressibilidadeGasCO2) + (gasComponents.yN2*fatorCompressibilidadeGasN2) + (gasComponents.yH2S*fatorCompressibilidadeGasH2S) + (gasComponents.yHidrocarbonetos*fatorCompressibilidadeGas)).roundToDecimalPlaces(4);
+        if((fatorCompressibilidadeGasCO2 != null) && (fatorCompressibilidadeGasH2S != null) && (fatorCompressibilidadeGasN2 != null) && (fatorCompressibilidadeGas != null)) {
+          fatorCompressibilidadeGas = ((gasComponents.yCO2*fatorCompressibilidadeGasCO2) + (gasComponents.yN2*fatorCompressibilidadeGasN2) + (gasComponents.yH2S*fatorCompressibilidadeGasH2S) + (gasComponents.yHidrocarbonetos*fatorCompressibilidadeGas)).roundToDecimalPlaces(4);
+        }
 
       }else{
         pressaoPseudoCritica = (gasComponents.pseudocriticalPressureMistura).roundToDecimalPlaces(2);
         temperaturaPseudoCritica = (gasComponents.pseudocriticalTemperatureMistura).roundToDecimalPlaces(2);
         (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCritica, temperaturaPseudoCritica: temperaturaPseudoCritica);
-        fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
+        fatorCompressibilidadeGas = (CalcularFactorZ.calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
       }
 
     } else{
@@ -242,7 +248,7 @@ class _TelaDadosReservatorioState extends State<TelaDadosReservatorio> {
 
       (pressaoPseudoReduzida, temperaturaPseudoReduzida) = CalcularPropriedadesPseudoReduzidas.calcular(pressao: pressao, temperatura: temperatura, pressaoPseudoCritica: pressaoPseudoCritica, temperaturaPseudoCritica: temperaturaPseudoCritica);
       
-      fatorCompressibilidadeGas = (CalcularFactorZ().calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
+      fatorCompressibilidadeGas = (CalcularFactorZ.calcular(ppr: pressaoPseudoReduzida, tpr: temperaturaPseudoReduzida));
       
     }
 
