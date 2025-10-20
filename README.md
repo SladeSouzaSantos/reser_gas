@@ -61,10 +61,24 @@ Massa Específica, Fator Volume-Formação e Propriedades Pseudo-Reduzidas (Equa
 <img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/25630f92-ab65-4320-bdcc-ec3bdc0e6dd3" />
 <img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/ebdec0a0-5257-4dd2-b4b9-9c0022697b36" />
 
+# 💻 Como Rodar o Projeto
 
+1) Clone o repositório:     
 
+       git clone https://github.com/SladeSouzaSantos/reser_gas.git
+       cd ReserGas
 
+3) Instale as dependências:
 
+        flutter pub get
 
+4) Execute o aplicativo:
 
+        flutter run
 
+5) Execute os testes unitários (Opcional, mas recomendado!):
+
+        flutter test
+
+# 📥 Download (APK)
+https://phasscode.com/projetos/resergas/resergas.apk
