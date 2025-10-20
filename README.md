@@ -3,18 +3,18 @@
 ReserGas é um aplicativo mobile desenvolvido em Flutter/Dart para o cálculo rápido e preciso de diversas propriedades do Gás de Reservatório (Gás Natural), utilizando correlações consagradas da Engenharia de Reservatórios.
 
 
-# 🎯 Objetivo Principal
+## 🎯 Objetivo Principal
 O objetivo principal do projeto é estimar as propriedades do gás presentes em um reservatório (como Fator de Compressibilidade, Viscosidade, Fator Volume-Formação, etc.) com precisão. Para isso, todo o foco de desenvolvimento foi na confiabilidade numérica e no isolamento da lógica de negócio.
 
 
-# ⚙️ Arquitetura e Estrutura
+## ⚙️ Arquitetura e Estrutura
 O projeto adota uma arquitetura inspirada em Clean Architecture e Domain-Driven Design (DDD), garantindo a separação de responsabilidades, testabilidade e manutenibilidade:
 Domain: Contém as entidades, modelos (GasReservatorio, Component, etc.) e contratos.
 UserCases: Camada que executa a lógica de negócio crucial (os cálculos e correlações da engenharia). Esta é a camada mais testada.
 Presentation: Camada Flutter (Widgets, Telas) responsável pela interface e consumo dos UserCases.
 
 
-# 🧪 Testes Unitários
+## 🧪 Testes Unitários
 A precisão dos algoritmos de engenharia é o ponto mais crítico do projeto. A camada de UserCases é 100% isolada e coberta por testes unitários focados na validação da exatidão numérica das correlações e no tratamento de erros (Edge Cases).
 
 Exemplo de Teste Unitário (Foco em Edge Cases):
@@ -50,7 +50,7 @@ O teste para CalcularPropriedadesPseudoCriticaPorComposicao demonstra a preocupa
     });
 
 
-# ✨ Funcionalidades e Correlações Implementadas
+## ✨ Funcionalidades e Correlações Implementadas
 O aplicativo permite a entrada de dados por 3 métodos (Composição, Densidade ou Massa Molecular) e calcula as seguintes propriedades:
 Fator de Compressibilidade (Dranchuk e Abou-Kassem);
 Viscosidade (Lee, Gonzalez & Eakin + Correção de Carr);
@@ -59,7 +59,7 @@ Propriedades Pseudo-Críticas (Kay's Rule (Composição) / Correlação de Sutto
 Massa Específica, Fator Volume-Formação e Propriedades Pseudo-Reduzidas (Equação do Gás Real).
 
 
-# 🖼️ Screenshots
+## 🖼️ Screenshots
 
 <img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/39267291-65f8-4ab1-9c54-066f3ee1c1c1" />
 <img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/40cfd6cf-6cf8-43eb-a853-12cbf0369b78" />
@@ -67,26 +67,27 @@ Massa Específica, Fator Volume-Formação e Propriedades Pseudo-Reduzidas (Equa
 <img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/ebdec0a0-5257-4dd2-b4b9-9c0022697b36" />
 
 
-# 💻 Como Rodar o Projeto
+## 💻 Como Rodar o Projeto
 
-1) Clone o repositório:     
+1. Clone o repositório:     
 
        git clone https://github.com/SladeSouzaSantos/reser_gas.git
        cd ReserGas
 
-3) Instale as dependências:
+2. Instale as dependências:
 
         flutter pub get
 
-4) Execute o aplicativo:
+3. Execute o aplicativo:
 
         flutter run
 
-5) Execute os testes unitários (Opcional, mas recomendado!):
+4. Execute os testes unitários (Opcional, mas recomendado!):
 
         flutter test
 
 
-# 📥 Download (APK)
+## 📥 Download (APK)
 https://phasscode.com/projetos/resergas/resergas.apk
+
 
