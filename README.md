@@ -62,10 +62,11 @@ Massa Específica, Fator Volume-Formação e Propriedades Pseudo-Reduzidas (Equa
 
 # 🖼️ Screenshots
 
-<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/39267291-65f8-4ab1-9c54-066f3ee1c1c1" />
-<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/40cfd6cf-6cf8-43eb-a853-12cbf0369b78" />
-<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/25630f92-ab65-4320-bdcc-ec3bdc0e6dd3" />
-<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/ebdec0a0-5257-4dd2-b4b9-9c0022697b36" />
+<img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/39267291-65f8-4ab1-9c54-066f3ee1c1c1" />
+<img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/40cfd6cf-6cf8-43eb-a853-12cbf0369b78" />
+<img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/25630f92-ab65-4320-bdcc-ec3bdc0e6dd3" />
+<img width="270" height="600" alt="image" src="https://github.com/user-attachments/assets/ebdec0a0-5257-4dd2-b4b9-9c0022697b36" />
+
 
 
 
